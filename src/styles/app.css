@@ -30,13 +30,18 @@ a:hover {
   flex: none;
 }
 
-.navigation-bar li {
+.breadcrumb li {
   display: inline-block;
   padding-left: 10px;
   position: relative;
 }
 
-.navigation-bar li:not(:first-child):before {
+.breadcrumb li span:hover{
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.breadcrumb li:not(:first-child):before {
   content: "/";
   position: absolute;
   margin-left: -10px;

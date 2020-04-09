@@ -1,5 +1,6 @@
 const explorer = document.querySelector("#explorer ul")
 const goUp = document.getElementById("go-up")
+const breadcrumb = document.getElementById("breadcrumb")
 
 const TYPE = Object.freeze({
   FOLDER: "FOLDER",
@@ -14,6 +15,8 @@ const rootFolder = Object.freeze({
 })
 
 const state = {
+  currentId: 7,
+  breadcrumb: [{ name: rootFolder.name, id: null }],
   nodes: [
     { id: 1, name: "Videos", type: TYPE.FOLDER, parentId: null },
     { id: 2, name: "Pictures", type: TYPE.FOLDER, parentId: null },
@@ -22,12 +25,7 @@ const state = {
     { id: 5, name: "CV", type: TYPE.FOLDER, parentId: 3 },
     { id: 6, name: "Amine Tirecht.pdf", type: TYPE.FILE, parentId: 5 },
   ],
-  currentFolder: {
-    id: null,
-    name: "Home",
-    type: TYPE.FOLDER,
-    parentId: null,
-  },
+  currentFolder: rootFolder,
 }
 
 main()
@@ -51,6 +49,25 @@ function renderExplorer() {
   Array.from(explorer.querySelectorAll(".node")).forEach((node) =>
     node.addEventListener("dblclick", respondToNodeDblClick)
   )
+
+  renderBreadcrumb()
+}
+
+function renderBreadcrumb() {
+  const breadcrumbItems = findParents(state.currentFolder)
+  if (state.currentFolder !== rootFolder) {
+    breadcrumbItems.push(state.currentFolder)
+  }
+
+  breadcrumb.innerHTML = breadcrumbItems.reduce((accumulator, node) => {
+    return (
+      accumulator + `<li data-id="${node.id}"><span>${node.name}</span></li>`
+    )
+  }, "")
+
+  Array.from(breadcrumb.querySelectorAll("li")).forEach((node) =>
+    node.addEventListener("click", respondToBreadcrumbClick)
+  )
 }
 
 function respondToNodeDblClick(e) {
@@ -64,11 +81,22 @@ function respondToNodeDblClick(e) {
   }
 }
 
+function respondToBreadcrumbClick(e) {
+  const rawId = e.currentTarget.dataset.id
+  if (rawId === "null") {
+    goToRoot()
+    return
+  }
+
+  const nextId = Number(e.currentTarget.dataset.id)
+  state.currentFolder = state.nodes.find((node) => node.id === nextId)
+  renderExplorer()
+}
+
 function navigateToParent() {
   if (state.currentFolder.parentId === null) {
     if (state.currentFolder.id !== null) {
-      state.currentFolder = rootFolder
-      renderExplorer()
+      goToRoot()
     }
   } else {
     state.currentFolder = state.nodes.find(
@@ -76,4 +104,17 @@ function navigateToParent() {
     )
     renderExplorer()
   }
+}
+
+function findParents(lookupNode) {
+  if (lookupNode.parentId === null) {
+    return [rootFolder]
+  }
+  const parent = state.nodes.find((node) => node.id === lookupNode.parentId)
+  return [...findParents(parent), parent]
+}
+
+function goToRoot() {
+  state.currentFolder = rootFolder
+  renderExplorer()
 }
