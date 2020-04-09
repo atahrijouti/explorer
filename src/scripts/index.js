@@ -56,8 +56,13 @@ function renderExplorer() {
 
 function respondToNodeDblClick(e) {
   const nextId = Number(e.currentTarget.dataset.id)
-  state.currentFolder = nodes.find((node) => node.id === nextId)
-  renderExplorer()
+  const clickedNode = nodes.find((node) => node.id === nextId)
+  if (clickedNode.type === TYPE.FOLDER) {
+    state.currentFolder = clickedNode
+    renderExplorer()
+  } else {
+    console.log(`${clickedNode.name} is a file : OPEN`)
+  }
 }
 
 function navigateToParent() {
