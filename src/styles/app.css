@@ -3,6 +3,14 @@
     padding: 0;
 }
 
+a {
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
 .app {
     height: 100vh;
     width: 100vw;
@@ -14,7 +22,7 @@
     flex: none;
     height: 30px;
     line-height: 30px;
-    background: khaki;
+    background: white;
 }
 
 .navigation-bar li {
@@ -33,13 +41,17 @@
     flex: none;
     height: 30px;
     line-height: 30px;
-    background: darkkhaki;
+    background: #e4e9ec;
 }
 
+.explorer {
+    padding: 10px;
+}
 .explorer li {
     display: inline-block;
     width: 100px;
     height: 100px;
+    margin: 5px;
 }
 
 
