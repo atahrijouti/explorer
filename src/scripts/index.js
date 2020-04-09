@@ -41,7 +41,6 @@ main();
 /////
 function main() {
   renderExplorer()
-
 }
 
 function renderExplorer() {
