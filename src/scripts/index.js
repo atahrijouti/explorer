@@ -6,15 +6,6 @@ const TYPE = Object.freeze({
   FILE: "FILE",
 })
 
-const nodes = [
-  { id: 1, name: "Videos", type: TYPE.FOLDER, parentId: null },
-  { id: 2, name: "Pictures", type: TYPE.FOLDER, parentId: null },
-  { id: 3, name: "Documents", type: TYPE.FOLDER, parentId: null },
-  { id: 4, name: "Music", type: TYPE.FOLDER, parentId: null },
-  { id: 5, name: "CV", type: TYPE.FOLDER, parentId: 3 },
-  { id: 6, name: "Amine Tirecht.pdf", type: TYPE.FILE, parentId: 5 },
-]
-
 const rootFolder = Object.freeze({
   id: null,
   name: "Home",
@@ -23,6 +14,14 @@ const rootFolder = Object.freeze({
 })
 
 const state = {
+  nodes: [
+    { id: 1, name: "Videos", type: TYPE.FOLDER, parentId: null },
+    { id: 2, name: "Pictures", type: TYPE.FOLDER, parentId: null },
+    { id: 3, name: "Documents", type: TYPE.FOLDER, parentId: null },
+    { id: 4, name: "Music", type: TYPE.FOLDER, parentId: null },
+    { id: 5, name: "CV", type: TYPE.FOLDER, parentId: 3 },
+    { id: 6, name: "Amine Tirecht.pdf", type: TYPE.FILE, parentId: 5 },
+  ],
   currentFolder: {
     id: null,
     name: "Home",
@@ -40,7 +39,7 @@ function main() {
 }
 
 function renderExplorer() {
-  explorer.innerHTML = nodes.reduce((accumulator, node) => {
+  explorer.innerHTML = state.nodes.reduce((accumulator, node) => {
     if (node.parentId === state.currentFolder.id) {
       return (
         accumulator +
@@ -56,7 +55,7 @@ function renderExplorer() {
 
 function respondToNodeDblClick(e) {
   const nextId = Number(e.currentTarget.dataset.id)
-  const clickedNode = nodes.find((node) => node.id === nextId)
+  const clickedNode = state.nodes.find((node) => node.id === nextId)
   if (clickedNode.type === TYPE.FOLDER) {
     state.currentFolder = clickedNode
     renderExplorer()
@@ -72,7 +71,7 @@ function navigateToParent() {
       renderExplorer()
     }
   } else {
-    state.currentFolder = nodes.find(
+    state.currentFolder = state.nodes.find(
       (node) => node.id === state.currentFolder.parentId
     )
     renderExplorer()
