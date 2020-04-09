@@ -1,4 +1,5 @@
 const explorer = document.querySelector("#explorer ul")
+const goUp = document.getElementById("go-up")
 
 const TYPE = Object.freeze({
   FOLDER: "FOLDER",
@@ -14,23 +15,33 @@ const nodes = [
   { id: 6, name: "Amine Tirecht.pdf", type: TYPE.FILE, parentId: 5 },
 ]
 
-let currentFolder = {
+const rootFolder = Object.freeze({
   id: null,
   name: "Home",
   type: TYPE.FOLDER,
   parentId: null,
+})
+
+const state = {
+  currentFolder: {
+    id: null,
+    name: "Home",
+    type: TYPE.FOLDER,
+    parentId: null,
+  },
 }
 
 main()
 
 /////
 function main() {
+  goUp.addEventListener("click", navigateToParent, false)
   renderExplorer()
 }
 
 function renderExplorer() {
   explorer.innerHTML = nodes.reduce((accumulator, node) => {
-    if (node.parentId === currentFolder.id) {
+    if (node.parentId === state.currentFolder.id) {
       return (
         accumulator +
         `<li data-id="${node.id}" class="node"><span>${node.name}</span></li>`
@@ -45,6 +56,20 @@ function renderExplorer() {
 
 function respondToNodeDblClick(e) {
   const nextId = Number(e.currentTarget.dataset.id)
-  currentFolder = nodes.find((node) => node.id === nextId)
+  state.currentFolder = nodes.find((node) => node.id === nextId)
   renderExplorer()
+}
+
+function navigateToParent() {
+  if (state.currentFolder.parentId === null) {
+    if (state.currentFolder.id !== null) {
+      state.currentFolder = rootFolder
+      renderExplorer()
+    }
+  } else {
+    state.currentFolder = nodes.find(
+      (node) => node.id === state.currentFolder.parentId
+    )
+    renderExplorer()
+  }
 }

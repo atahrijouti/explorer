@@ -23,6 +23,11 @@ a:hover {
   height: 30px;
   line-height: 30px;
   background: white;
+  display: flex;
+}
+
+.navigation-bar .buttons {
+  flex: none;
 }
 
 .navigation-bar li {
