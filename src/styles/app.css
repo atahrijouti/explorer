@@ -46,13 +46,17 @@ a:hover {
 
 .explorer {
     padding: 10px;
+    flex: 1;
 }
+
 .explorer li {
     display: inline-block;
     width: 100px;
     height: 100px;
     margin: 5px;
+    user-select: none;
 }
 
-
-
+.explorer li:hover {
+    background: #C3D6E8;
+}
