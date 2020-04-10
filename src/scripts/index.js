@@ -1,6 +1,7 @@
 const explorer = document.querySelector("#explorer ul")
 const goUp = document.getElementById("go-up")
 const breadcrumb = document.getElementById("breadcrumb")
+const newFolderBtn = document.getElementById("new-folder")
 
 const TYPE = Object.freeze({
   FOLDER: "FOLDER",
@@ -15,13 +16,15 @@ const rootFolder = Object.freeze({
 })
 
 const state = {
-  currentId: 7,
+  nextId: 9,
   breadcrumb: [{ name: rootFolder.name, id: null }],
   nodes: [
     { id: 1, name: "Videos", type: TYPE.FOLDER, parentId: null },
     { id: 2, name: "Pictures", type: TYPE.FOLDER, parentId: null },
     { id: 3, name: "Documents", type: TYPE.FOLDER, parentId: null },
     { id: 4, name: "Music", type: TYPE.FOLDER, parentId: null },
+    { id: 7, name: "New folder", type: TYPE.FOLDER, parentId: null },
+    { id: 8, name: "New folder (2)", type: TYPE.FOLDER, parentId: null },
     { id: 5, name: "CV", type: TYPE.FOLDER, parentId: 3 },
     { id: 6, name: "Amine Tirecht.pdf", type: TYPE.FILE, parentId: 5 },
   ],
@@ -33,6 +36,7 @@ main()
 /////
 function main() {
   goUp.addEventListener("click", navigateToParent, false)
+  newFolderBtn.addEventListener("click", createNewFolder, false)
   renderExplorer()
 }
 
@@ -117,4 +121,51 @@ function findParents(lookupNode) {
 function goToRoot() {
   state.currentFolder = rootFolder
   renderExplorer()
+}
+
+function createNewFolder() {
+  const suitableName = getSuitableName(
+    "New folder",
+    TYPE.FOLDER,
+    state.currentFolder.id
+  )
+
+  state.nodes.push({
+    id: state.nextId,
+    name: suitableName,
+    type: TYPE.FOLDER,
+    parentId: state.currentFolder.id,
+  })
+  state.nextId++
+  renderExplorer()
+}
+
+function getSuitableName(newName, nodeType, parentId) {
+  // TODO: make regex dynamic dependent on newName
+  const folderRegex = /^New folder(?: \(([0-9]*)\))?$/
+  const fileRegex = /^New file(?: \(([0-9]*)\))?$/
+  const regex = new RegExp(nodeType === TYPE.FOLDER ? folderRegex : fileRegex)
+  const exitingNodes = state.nodes
+    .filter((node) => {
+      return (
+        node.parentId === parentId &&
+        node.name.match(regex) !== null &&
+        node.type == nodeType
+      )
+    })
+    .sort((a, b) => {
+      return a.name.localeCompare(b.name)
+    })
+
+  if (exitingNodes.length) {
+    const lastNode = exitingNodes[exitingNodes.length - 1]
+    if (lastNode.name === newName) {
+      return `${newName} (2)`
+    } else {
+      const number = Number(lastNode.name.match(regex)[1])
+      return `${newName} (${number + 1})`
+    }
+  } else {
+    return newName
+  }
 }
