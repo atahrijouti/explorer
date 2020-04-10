@@ -1,4 +1,4 @@
-const explorer = document.querySelector("#explorer ul")
+const explorer = document.querySelector("#explorer")
 const goUp = document.getElementById("go-up")
 const breadcrumb = document.getElementById("breadcrumb")
 const newFolderBtn = document.getElementById("new-folder")
@@ -40,19 +40,30 @@ function main() {
   renderExplorer()
 }
 
-function renderExplorer() {
-  explorer.innerHTML = state.nodes.reduce((accumulator, node) => {
-    if (node.parentId === state.currentFolder.id) {
-      return (
-        accumulator +
-        `<li data-id="${node.id}" class="node"><span>${node.name}</span></li>`
-      )
-    }
-    return accumulator + ""
-  }, "")
-  Array.from(explorer.querySelectorAll(".node")).forEach((node) =>
-    node.addEventListener("dblclick", respondToNodeDblClick)
+function NodeComponent(node) {
+  const element = document.createElement("li")
+  element.classList.add("node")
+  element.addEventListener(
+    "dblclick",
+    () => {
+      respondToNodeDblClick(node)
+    },
+    false
   )
+  element.innerHTML = `<span>${node.name}</span>`
+  return element
+}
+
+function renderExplorer() {
+  const ul = document.createElement("ul")
+
+  state.nodes.forEach((node) => {
+    if (node.parentId === state.currentFolder.id) {
+      ul.appendChild(NodeComponent(node))
+    }
+  })
+
+  explorer.replaceChild(ul, explorer.querySelector("ul"))
 
   renderBreadcrumb()
 }
@@ -74,8 +85,8 @@ function renderBreadcrumb() {
   )
 }
 
-function respondToNodeDblClick(e) {
-  const nextId = Number(e.currentTarget.dataset.id)
+function respondToNodeDblClick(node) {
+  const nextId = node.id
   const clickedNode = state.nodes.find((node) => node.id === nextId)
   if (clickedNode.type === TYPE.FOLDER) {
     state.currentFolder = clickedNode
