@@ -152,10 +152,7 @@ function createNewFolder() {
 }
 
 function getSuitableName(newName, nodeType, parentId) {
-  // TODO: make regex dynamic dependent on newName
-  const folderRegex = /^New folder(?: \(([0-9]*)\))?$/
-  const fileRegex = /^New file(?: \(([0-9]*)\))?$/
-  const regex = new RegExp(nodeType === TYPE.FOLDER ? folderRegex : fileRegex)
+  const regex = new RegExp(`^${newName}(?: \\(([0-9]*)\\))?$`)
   const exitingNodes = state.nodes
     .filter((node) => {
       return (
