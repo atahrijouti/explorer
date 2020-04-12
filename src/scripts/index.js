@@ -2,6 +2,7 @@ const explorer = document.querySelector("#explorer")
 const goUp = document.getElementById("go-up")
 const breadcrumb = document.getElementById("breadcrumb")
 const newFolderBtn = document.getElementById("new-folder")
+const newFileBtn = document.getElementById("new-file")
 
 const TYPE = Object.freeze({
   FOLDER: "FOLDER",
@@ -36,7 +37,16 @@ main()
 /////
 function main() {
   goUp.addEventListener("click", navigateToParent, false)
-  newFolderBtn.addEventListener("click", createNewFolder, false)
+  newFolderBtn.addEventListener(
+    "click",
+    () => createNewNode("New folder", TYPE.FOLDER),
+    false
+  )
+  newFileBtn.addEventListener(
+    "click",
+    () => createNewNode("New file", TYPE.FILE),
+    false
+  )
   renderExplorer()
 }
 
@@ -134,17 +144,13 @@ function goToRoot() {
   renderExplorer()
 }
 
-function createNewFolder() {
-  const suitableName = getSuitableName(
-    "New folder",
-    TYPE.FOLDER,
-    state.currentFolder.id
-  )
+function createNewNode(name, type) {
+  const suitableName = getSuitableName(name, type, state.currentFolder.id)
 
   state.nodes.push({
     id: state.nextId,
     name: suitableName,
-    type: TYPE.FOLDER,
+    type,
     parentId: state.currentFolder.id,
   })
   state.nextId++
