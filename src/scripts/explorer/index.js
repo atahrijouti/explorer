@@ -1,5 +1,7 @@
-import { state, explorer, TYPE } from "../app"
-import { renderBreadcrumb } from "../breadcrumb"
+import { explorer } from "../app"
+import { state } from "../app/state"
+import { TYPE } from "../app/types"
+import { renderBreadcrumb } from "../navigation-bar"
 import { NodeComponent } from "./components/node"
 
 export function renderExplorer() {

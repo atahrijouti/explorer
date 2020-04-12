@@ -1,5 +1,7 @@
-import { state, breadcrumb, findParents, rootFolder, goToRoot } from "../app"
+import { breadcrumb } from "../app"
+import { state, rootFolder } from "../app/state"
 import { renderExplorer } from "../explorer"
+import { findParents } from "../database/queries"
 
 export function renderBreadcrumb() {
   const breadcrumbItems = findParents(state.currentFolder)
@@ -27,5 +29,23 @@ function respondToBreadcrumbClick(e) {
 
   const nextId = Number(e.currentTarget.dataset.id)
   state.currentFolder = state.nodes.find((node) => node.id === nextId)
+  renderExplorer()
+}
+
+export function navigateToParent() {
+  if (state.currentFolder.parentId === null) {
+    if (state.currentFolder.id !== null) {
+      goToRoot()
+    }
+  } else {
+    state.currentFolder = state.nodes.find(
+      (node) => node.id === state.currentFolder.parentId
+    )
+    renderExplorer()
+  }
+}
+
+function goToRoot() {
+  state.currentFolder = rootFolder
   renderExplorer()
 }
