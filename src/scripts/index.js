@@ -153,27 +153,36 @@ function createNewFolder() {
 
 function getSuitableName(newName, nodeType, parentId) {
   const regex = new RegExp(`^${newName}(?: \\(([0-9]*)\\))?$`)
-  const exitingNodes = state.nodes
-    .filter((node) => {
-      return (
-        node.parentId === parentId &&
-        node.name.match(regex) !== null &&
-        node.type == nodeType
-      )
-    })
-    .sort((a, b) => {
-      return a.name.localeCompare(b.name)
-    })
 
-  if (exitingNodes.length) {
-    const lastNode = exitingNodes[exitingNodes.length - 1]
-    if (lastNode.name === newName) {
-      return `${newName} (2)`
-    } else {
-      const number = Number(lastNode.name.match(regex)[1])
-      return `${newName} (${number + 1})`
+  const suffix = state.nodes.reduce((max, node) => {
+    const matches = node.name.match(regex)
+
+    // if we find a matching name in the current folder & same type
+    if (
+      node.parentId === parentId &&
+      matches !== null &&
+      node.type == nodeType
+    ) {
+      // if we still haven't found a max then use  "${newName} (2)"
+      if (node.name === newName && max === null) {
+        return 2
+      }
+
+      const nextNumber = Number(matches[1]) + 1
+
+      // if no max but we have a match with a number, use nextNumber
+      if (max === null) {
+        return nextNumber
+      } else {
+        // if nextNumber bigger than max, use nextNumber
+        if (nextNumber > max) {
+          return nextNumber
+        }
+      }
     }
-  } else {
-    return newName
-  }
+
+    return max
+  }, null)
+
+  return `${newName}${suffix ? ` (${suffix})` : ""}`
 }
