@@ -21,5 +21,5 @@ export const state = {
     { id: 6, name: "Amine Tirecht.pdf", type: TYPE.FILE, parentId: 5 },
   ],
   currentFolder: rootFolder,
-  selectedNodesIds: [1, 7, 8],
+  selectedNodesIds: [],
 }

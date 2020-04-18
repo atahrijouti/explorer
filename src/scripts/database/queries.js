@@ -1,5 +1,5 @@
 import { rootFolder, state } from "../app/state"
-import { renderExplorerNodes } from "../explorer"
+import { renderExplorerNodes, explorer } from "../explorer"
 
 export function findParents(lookupNode) {
   if (lookupNode.parentId === null) {
@@ -20,6 +20,18 @@ export function createNewNode(name, type) {
   })
   state.nextId++
   renderExplorerNodes()
+}
+
+export function deleteNodes() {
+  state.selectedNodesIds.forEach((id) => {
+    const index = state.nodes.findIndex((node) => node.id === id)
+    if (index === -1) {
+      return
+    }
+    state.nodes.splice(index, 1)
+    explorer.querySelector(`[data-id="${id}"]`).remove()
+  })
+  state.selectedNodesIds = []
 }
 
 function getSuitableName(newName, nodeType, parentId) {
