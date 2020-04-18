@@ -1,5 +1,5 @@
 import { rootFolder, state } from "../app/state"
-import { renderExplorer } from "../explorer"
+import { renderExplorerNodes } from "../explorer"
 
 export function findParents(lookupNode) {
   if (lookupNode.parentId === null) {
@@ -19,7 +19,7 @@ export function createNewNode(name, type) {
     parentId: state.currentFolder.id,
   })
   state.nextId++
-  renderExplorer()
+  renderExplorerNodes()
 }
 
 function getSuitableName(newName, nodeType, parentId) {
@@ -32,7 +32,7 @@ function getSuitableName(newName, nodeType, parentId) {
     if (
       node.parentId === parentId &&
       matches !== null &&
-      node.type == nodeType
+      node.type === nodeType
     ) {
       // if we still haven't found a max then use  "${newName} (2)"
       if (node.name === newName && max === null) {
