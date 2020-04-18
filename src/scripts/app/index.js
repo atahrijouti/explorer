@@ -1,7 +1,7 @@
 import { Explorer } from "../explorer"
-import { Breadcrumb } from "../navigation-bar"
+import { NavigationBar } from "../navigation-bar"
 
 export function app() {
-  Breadcrumb()
+  NavigationBar()
   Explorer()
 }

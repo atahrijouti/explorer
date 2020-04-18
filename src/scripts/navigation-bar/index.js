@@ -8,7 +8,7 @@ export const newFileBtn = document.getElementById("new-file")
 export const goUp = document.getElementById("go-up")
 export const breadcrumb = document.getElementById("breadcrumb")
 
-export function Breadcrumb() {
+export function NavigationBar() {
   goUp.addEventListener("click", navigateToParent, false)
   newFolderBtn.addEventListener(
     "click",
