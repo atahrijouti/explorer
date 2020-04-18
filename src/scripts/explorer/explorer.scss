@@ -1,0 +1,28 @@
+.explorer {
+  padding: 10px;
+  flex: 1;
+}
+
+.explorer {
+  .node {
+    display: inline-block;
+    width: 100px;
+    height: 100px;
+    margin: 5px;
+    user-select: none;
+    border: 1px solid transparent;
+
+    &:hover {
+      background: hsl(205, 51%, 92%);
+    }
+
+    &.selected {
+      background: hsla(205, 51%, 82%, 1);
+      border: 1px solid hsla(205, 51%, 62%, 1);
+    }
+
+    .rename {
+      width: 100%;
+    }
+  }
+}
