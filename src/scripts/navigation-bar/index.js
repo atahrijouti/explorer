@@ -23,7 +23,7 @@ export function NavigationBar() {
     () => createNewNode("New file", TYPE.FILE),
     false
   )
-  deleteNodesBtn.addEventListener("click", () => deleteNodes(), false)
+  deleteNodesBtn.addEventListener("click", handleDeleteNodes, false)
   renderBreadcrumb()
 }
 
@@ -42,6 +42,14 @@ export function renderBreadcrumb() {
   Array.from(breadcrumb.querySelectorAll("li")).forEach((node) =>
     node.addEventListener("click", respondToBreadcrumbClick)
   )
+}
+
+function handleDeleteNodes() {
+  state.selectedNodesIds.forEach((id) => {
+    explorer.querySelector(`[data-id="${id}"]`).remove()
+  })
+  deleteNodesBtn.setAttribute("disabled", "disabled")
+  deleteNodes()
 }
 
 function respondToBreadcrumbClick(e) {

@@ -1,6 +1,6 @@
 import { state } from "../app/state"
 import { TYPE } from "../app/types"
-import { renderBreadcrumb } from "../navigation-bar"
+import { renderBreadcrumb, deleteNodesBtn } from "../navigation-bar"
 import { NodeComponent } from "./components/node"
 
 import "./explorer.scss"
@@ -67,8 +67,10 @@ function handleNodeClick(node, e) {
 
   if (state.selectedNodesIds.find((id) => id === node.id)) {
     state.selectedNodesIds = []
+    deleteNodesBtn.setAttribute("disabled", "disabled")
   } else {
     state.selectedNodesIds = [node.id]
+    deleteNodesBtn.removeAttribute("disabled")
   }
 
   updateExplorerNodes([...previousSelection, ...state.selectedNodesIds])

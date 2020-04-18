@@ -29,7 +29,6 @@ export function deleteNodes() {
       return
     }
     state.nodes.splice(index, 1)
-    explorer.querySelector(`[data-id="${id}"]`).remove()
   })
   state.selectedNodesIds = []
 }
