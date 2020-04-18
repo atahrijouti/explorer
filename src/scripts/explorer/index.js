@@ -3,6 +3,8 @@ import { TYPE } from "../app/types"
 import { renderBreadcrumb } from "../navigation-bar"
 import { NodeComponent } from "./components/node"
 
+import "./explorer.css"
+
 export const explorer = document.querySelector("#explorer")
 
 export function Explorer() {

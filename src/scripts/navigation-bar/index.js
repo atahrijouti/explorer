@@ -3,6 +3,8 @@ import { renderExplorerNodes } from "../explorer"
 import { findParents, createNewNode } from "../database/queries"
 import { TYPE } from "../app/types"
 
+import "./navigation-bar.css"
+
 export const newFolderBtn = document.getElementById("new-folder")
 export const newFileBtn = document.getElementById("new-file")
 export const goUp = document.getElementById("go-up")
