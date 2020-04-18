@@ -25,7 +25,7 @@ export function renderExplorerNodes() {
   renderBreadcrumb()
 }
 
-function updateExplorerNodes(nodeIds) {
+function renderSpecificExplorerNodes(nodeIds) {
   const selector = nodeIds.map((id) => `[data-id="${id}"]`).join(",")
   explorer.querySelectorAll(selector).forEach((domNode) => {
     const id = Number(domNode.dataset.id)
@@ -73,5 +73,5 @@ function handleNodeClick(node, e) {
     deleteNodesBtn.removeAttribute("disabled")
   }
 
-  updateExplorerNodes([...previousSelection, ...state.selectedNodesIds])
+  renderSpecificExplorerNodes([...previousSelection, ...state.selectedNodesIds])
 }
