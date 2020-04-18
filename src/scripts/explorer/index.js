@@ -1,10 +1,15 @@
-import { explorer } from "../app"
 import { state } from "../app/state"
 import { TYPE } from "../app/types"
 import { renderBreadcrumb } from "../navigation-bar"
 import { NodeComponent } from "./components/node"
 
-export function renderExplorer() {
+export const explorer = document.querySelector("#explorer")
+
+export function Explorer() {
+  renderExplorerNodes()
+}
+
+export function renderExplorerNodes() {
   const ul = document.createElement("ul")
 
   state.nodes.forEach((node) => {
@@ -23,7 +28,7 @@ export function handleNodeDblClick(node) {
   const clickedNode = state.nodes.find((node) => node.id === nextId)
   if (clickedNode.type === TYPE.FOLDER) {
     state.currentFolder = clickedNode
-    renderExplorer()
+    renderExplorerNodes()
   } else {
     console.log(`${clickedNode.name} is a file : OPEN`)
   }
