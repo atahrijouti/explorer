@@ -1,6 +1,10 @@
 import { state, rootFolder } from "../app/state"
 import { renderExplorerNodes } from "../explorer"
-import { findParents, createNewNode, deleteNodes } from "../database/queries"
+import {
+  findParents,
+  createNewNode,
+  deleteSelectedNodes,
+} from "../database/queries"
 import { TYPE } from "../app/types"
 
 import "./navigation-bar.css"
@@ -49,7 +53,7 @@ function handleDeleteNodes() {
     explorer.querySelector(`[data-id="${id}"]`).remove()
   })
   deleteNodesBtn.setAttribute("disabled", "disabled")
-  deleteNodes()
+  deleteSelectedNodes()
 }
 
 function respondToBreadcrumbClick(e) {

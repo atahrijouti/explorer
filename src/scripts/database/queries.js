@@ -22,15 +22,34 @@ export function createNewNode(name, type) {
   renderExplorerNodes()
 }
 
-export function deleteNodes() {
-  state.selectedNodesIds.forEach((id) => {
-    const index = state.nodes.findIndex((node) => node.id === id)
-    if (index === -1) {
-      return
-    }
-    state.nodes.splice(index, 1)
-  })
+export function deleteSelectedNodes() {
+  deleteNode(state.selectedNodesIds)
   state.selectedNodesIds = []
+}
+
+function deleteNode(ids) {
+  const buffer = [...ids]
+
+  while (buffer.length > 0) {
+    // store head
+    const head = buffer[0]
+
+    // find children of the current node
+    const children = state.nodes.reduce(function (acc, node) {
+      if (node.parentId === head) {
+        acc.push(node.id)
+      }
+      return acc
+    }, [])
+
+    // push children at the end of the array
+    buffer.push(...children)
+
+    // removes head from buffer & from state
+    buffer.shift()
+    const stateNodeIndex = state.nodes.findIndex((node) => node.id === head)
+    state.nodes.splice(stateNodeIndex, 1)
+  }
 }
 
 function getSuitableName(newName, nodeType, parentId) {
