@@ -29,6 +29,8 @@ export function NavigationBar() {
   )
   deleteNodesBtn.addEventListener("click", handleDeleteNodes, false)
   renderBreadcrumb()
+  state.selectedNodesIds.length > 0 &&
+    deleteNodesBtn.removeAttribute("disabled")
 }
 
 export function renderBreadcrumb() {
