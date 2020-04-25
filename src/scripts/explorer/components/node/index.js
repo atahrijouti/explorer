@@ -1,9 +1,26 @@
+function InputLabel({ name, onKeyUp }) {
+  const element = document.createElement("input")
+  element.setAttribute("type", "text")
+  element.classList.add("rename")
+  element.value = name
+  element.addEventListener("keyup", onKeyUp, false)
+  return element
+}
+
+function TextLabel({ name }) {
+  const element = document.createElement("span")
+  element.classList.add("label")
+  element.innerText = name
+  return element
+}
+
 export function NodeComponent({
   node,
   onDblClick,
   onClick,
   selected,
   renaming,
+  onKeyUp,
 }) {
   const element = document.createElement("li")
   element.classList.add("node")
@@ -27,9 +44,14 @@ export function NodeComponent({
   )
 
   const label = renaming
-    ? `<input type="text" class="rename" value="${node.name}" />`
-    : `<span class="label">${node.name}</span>`
+    ? InputLabel({
+        name: node.name,
+        onKeyUp: (e) => {
+          onKeyUp(node, e)
+        },
+      })
+    : TextLabel({ name: node.name })
 
-  element.innerHTML = label
+  element.appendChild(label)
   return element
 }

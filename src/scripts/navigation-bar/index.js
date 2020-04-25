@@ -1,5 +1,5 @@
 import { state, rootFolder } from "../app/state"
-import { renderExplorerNodes, renderSpecificExplorerNodes } from "../explorer"
+import { renderExplorerNodes, rerenderSelectedNodes } from "../explorer"
 import {
   findParents,
   createNewNode,
@@ -65,7 +65,7 @@ function handleDeleteNodes() {
 
 function handleEditNode() {
   state.renaming = true
-  renderSpecificExplorerNodes(state.selectedNodesIds)
+  rerenderSelectedNodes()
 }
 
 function respondToBreadcrumbClick(e) {

@@ -34,6 +34,28 @@ export function renderSpecificExplorerNodes(nodeIds) {
   })
 }
 
+export function rerenderSelectedNodes() {
+  renderSpecificExplorerNodes(state.selectedNodesIds)
+}
+
+function handleInputKeyUp(node, e) {
+  if (e.key === "Enter") {
+  }
+  switch (e.key) {
+    case "Enter":
+      node.name = e.currentTarget.value
+      state.renaming = false
+      rerenderSelectedNodes()
+      break
+    case "Escape":
+      state.renaming = false
+      rerenderSelectedNodes()
+      break
+    default:
+      return true
+  }
+}
+
 function buildNode(node) {
   const selected = state.selectedNodesIds.find((n) => n === node.id) != null
   return NodeComponent({
@@ -42,6 +64,7 @@ function buildNode(node) {
     onClick: handleNodeClick,
     selected,
     renaming: state.renaming && selected,
+    onKeyUp: handleInputKeyUp,
   })
 }
 
@@ -57,6 +80,9 @@ function handleNodeDblClick(node, e) {
   } else {
     console.log(`${clickedNode.name} is a file : OPEN`)
   }
+  deleteNodesBtn.removeAttribute("disabled")
+  state.selectedNodesIds.length === 1 && renameBtn.removeAttribute("disabled")
+  state.renaming = false
 }
 
 function handleNodeClick(node, e) {
