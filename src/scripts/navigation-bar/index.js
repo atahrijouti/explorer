@@ -1,5 +1,5 @@
 import { state, rootFolder } from "../app/state"
-import { renderExplorerNodes } from "../explorer"
+import { renderExplorerNodes, renderSpecificExplorerNodes } from "../explorer"
 import {
   findParents,
   createNewNode,
@@ -14,6 +14,7 @@ export const breadcrumb = document.getElementById("breadcrumb")
 export const newFolderBtn = document.getElementById("new-folder")
 export const newFileBtn = document.getElementById("new-file")
 export const deleteNodesBtn = document.getElementById("delete-nodes")
+export const renameBtn = document.getElementById("rename-node")
 
 export function NavigationBar() {
   goUp.addEventListener("click", navigateToParent, false)
@@ -28,9 +29,13 @@ export function NavigationBar() {
     false
   )
   deleteNodesBtn.addEventListener("click", handleDeleteNodes, false)
+  renameBtn.addEventListener("click", handleEditNode, false)
   renderBreadcrumb()
-  state.selectedNodesIds.length > 0 &&
+  if (state.selectedNodesIds.length > 0) {
     deleteNodesBtn.removeAttribute("disabled")
+    state.selectedNodesIds.length === 1 &&
+      staterenameBtn.removeAttribute("disabled")
+  }
 }
 
 export function renderBreadcrumb() {
@@ -56,6 +61,11 @@ function handleDeleteNodes() {
   })
   deleteNodesBtn.setAttribute("disabled", "disabled")
   deleteSelectedNodes()
+}
+
+function handleEditNode() {
+  state.renaming = true
+  renderSpecificExplorerNodes(state.selectedNodesIds)
 }
 
 function respondToBreadcrumbClick(e) {

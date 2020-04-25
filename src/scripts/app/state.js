@@ -22,4 +22,5 @@ export const state = {
   ],
   currentFolder: rootFolder,
   selectedNodesIds: [],
+  renaming: false,
 }

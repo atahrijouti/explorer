@@ -1,6 +1,6 @@
 import { state } from "../app/state"
 import { TYPE } from "../app/types"
-import { renderBreadcrumb, deleteNodesBtn } from "../navigation-bar"
+import { renderBreadcrumb, deleteNodesBtn, renameBtn } from "../navigation-bar"
 import { NodeComponent } from "./components/node"
 
 import "./explorer.scss"
@@ -25,7 +25,7 @@ export function renderExplorerNodes() {
   renderBreadcrumb()
 }
 
-function renderSpecificExplorerNodes(nodeIds) {
+export function renderSpecificExplorerNodes(nodeIds) {
   const selector = nodeIds.map((id) => `[data-id="${id}"]`).join(",")
   explorer.querySelectorAll(selector).forEach((domNode) => {
     const id = Number(domNode.dataset.id)
@@ -68,9 +68,12 @@ function handleNodeClick(node, e) {
   if (state.selectedNodesIds.find((id) => id === node.id)) {
     state.selectedNodesIds = []
     deleteNodesBtn.setAttribute("disabled", "disabled")
+    renameBtn.setAttribute("disabled", "disabled")
   } else {
     state.selectedNodesIds = [node.id]
     deleteNodesBtn.removeAttribute("disabled")
+    state.selectedNodesIds.length === 1 && renameBtn.removeAttribute("disabled")
+    state.renaming = false
   }
 
   renderSpecificExplorerNodes([...previousSelection, ...state.selectedNodesIds])
