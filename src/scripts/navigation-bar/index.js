@@ -30,11 +30,17 @@ export function NavigationBar() {
   )
   deleteNodesBtn.addEventListener("click", handleDeleteNodes, false)
   renameBtn.addEventListener("click", handleEditNode, false)
+  document.addEventListener("keyup", e => {
+    if (e.key !== 'F2') {
+      return;
+    }
+    handleEditNode()
+  }, false)
   renderBreadcrumb()
   if (state.selectedNodesIds.length > 0) {
     deleteNodesBtn.removeAttribute("disabled")
     state.selectedNodesIds.length === 1 &&
-      staterenameBtn.removeAttribute("disabled")
+      renameBtn.removeAttribute("disabled")
   }
 }
 
