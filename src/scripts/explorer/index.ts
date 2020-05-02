@@ -38,7 +38,10 @@ export function renderSpecificExplorerNodes(nodeIds: number[]) {
 
   selectedDomNodes.forEach((currentNodeDom: HTMLLIElement) => {
     const id = Number(currentNodeDom.dataset.id)
-    const node = state.nodes.find((n) => n.id === id)!
+    const node = state.nodes.find((n) => n.id === id)
+    if (!node) {
+      return
+    }
     const newNodeDom = buildNode(node)
     explorer.querySelector("ul")!.replaceChild(newNodeDom, currentNodeDom)
     // when newNodeDom has been mounted, trigger MOUNTED event on newNodeDom
@@ -53,12 +56,10 @@ export function rerenderSelectedNodes() {
   renderSpecificExplorerNodes(state.selectedNodesIds)
 }
 
-function handleInputKeyUp(node, e) {
-  if (e.key === "Enter") {
-  }
+function handleInputKeyUp(node: Node, e: KeyboardEvent) {
   switch (e.key) {
     case "Enter":
-      node.name = e.currentTarget.value
+      node.name = (<HTMLInputElement>e.currentTarget)?.value ?? ""
       state.renaming = false
       rerenderSelectedNodes()
       break
@@ -83,25 +84,25 @@ function buildNode(node: Node) {
   })
 }
 
-function handleNodeDblClick(node, e) {
-  if (e.target.classList.contains("rename")) {
+function handleNodeDblClick(node: Node, e: MouseEvent) {
+  if ((<HTMLLIElement>e.target)?.classList.contains("rename")) {
     return
   }
   const nextId = node.id
   const clickedNode = state.nodes.find((node) => node.id === nextId)
-  if (clickedNode.type === NodeType.FOLDER) {
+  if (clickedNode?.type === NodeType.FOLDER) {
     state.currentFolder = clickedNode
     renderExplorerNodes()
   } else {
-    console.log(`${clickedNode.name} is a file : OPEN`)
+    console.log(`${clickedNode?.name} is a file : OPEN`)
   }
   deleteNodesBtn.removeAttribute("disabled")
   state.selectedNodesIds.length === 1 && renameBtn.removeAttribute("disabled")
   state.renaming = false
 }
 
-function handleNodeClick(node, e) {
-  if (e.target.classList.contains("rename")) {
+function handleNodeClick(node: Node, e: MouseEvent) {
+  if ((<HTMLLIElement>e.target)?.classList.contains("rename")) {
     return
   }
   const previousSelection = [...state.selectedNodesIds]
@@ -111,7 +112,7 @@ function handleNodeClick(node, e) {
     deleteNodesBtn.setAttribute("disabled", "disabled")
     renameBtn.setAttribute("disabled", "disabled")
   } else {
-    state.selectedNodesIds = [node.id]
+    state.selectedNodesIds = node.id != null ? [node.id] : []
     deleteNodesBtn.removeAttribute("disabled")
     state.selectedNodesIds.length === 1 && renameBtn.removeAttribute("disabled")
     state.renaming = false

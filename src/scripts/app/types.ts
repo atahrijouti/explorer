@@ -8,7 +8,7 @@ export enum CustomEvent {
 }
 
 export type Node = {
-  id: number
+  id: number | null
   name: string
   type: NodeType
   parentId: number | null

@@ -1,15 +1,21 @@
 import { rootFolder, state } from "../app/state"
-import { renderExplorerNodes, explorer } from "../explorer"
+import { renderExplorerNodes } from "../explorer"
+import { Node, NodeType } from "../app/types"
 
-export function findParents(lookupNode) {
+export function findParents(lookupNode: Node): Node[] {
   if (lookupNode.parentId === null) {
     return [rootFolder]
   }
   const parent = state.nodes.find((node) => node.id === lookupNode.parentId)
-  return [...findParents(parent), parent]
+
+  if (parent == null) {
+    return []
+  }
+
+  return [...(parent && { ...findParents(parent) }), parent]
 }
 
-export function createNewNode(name, type) {
+export function createNewNode(name: string, type: NodeType) {
   const suitableName = getSuitableName(name, type, state.currentFolder.id)
 
   state.nodes.push({
@@ -27,7 +33,7 @@ export function deleteSelectedNodes() {
   state.selectedNodesIds = []
 }
 
-function deleteNode(ids) {
+function deleteNode(ids: number[]) {
   const buffer = [...ids]
 
   while (buffer.length > 0) {
@@ -35,8 +41,8 @@ function deleteNode(ids) {
     const head = buffer[0]
 
     // find children of the current node
-    const children = state.nodes.reduce(function (acc, node) {
-      if (node.parentId === head) {
+    const children = state.nodes.reduce<number[]>(function (acc, node) {
+      if (node.parentId === head && node.id != null) {
         acc.push(node.id)
       }
       return acc
@@ -52,10 +58,14 @@ function deleteNode(ids) {
   }
 }
 
-function getSuitableName(newName, nodeType, parentId) {
+function getSuitableName(
+  newName: string,
+  nodeType: NodeType,
+  parentId: Node["id"]
+) {
   const regex = new RegExp(`^${newName}(?: \\(([0-9]*)\\))?$`)
 
-  const suffix = state.nodes.reduce((max, node) => {
+  const suffix = state.nodes.reduce<number | null>((max, node) => {
     const matches = node.name.match(regex)
 
     // if we find a matching name in the current folder & same type
