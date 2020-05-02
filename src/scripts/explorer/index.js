@@ -25,12 +25,23 @@ export function renderExplorerNodes() {
   renderBreadcrumb()
 }
 
+/**
+ * Re-Render nodes identified by a set of nodeIds
+ * @param {number[]} nodeIds
+ */
 export function renderSpecificExplorerNodes(nodeIds) {
+  // generate selector to select all existing dom nodes based on nodeIds
   const selector = nodeIds.map((id) => `[data-id="${id}"]`).join(",")
-  explorer.querySelectorAll(selector).forEach((domNode) => {
-    const id = Number(domNode.dataset.id)
+  explorer.querySelectorAll(selector).forEach((currentNodeDom) => {
+    const id = Number(currentNodeDom.dataset.id)
     const node = state.nodes.find((n) => n.id === id)
-    explorer.querySelector("ul").replaceChild(buildNode(node), domNode)
+    const newNodeDom = buildNode(node)
+    explorer.querySelector("ul").replaceChild(newNodeDom, currentNodeDom)
+    // when newNodeDom has been mounted, trigger MOUNTED event on newNodeDom
+    // so that newNodeDom also knows that it was mounted
+    if (newNodeDom.listensToMount) {
+      newNodeDom.dispatchEvent(new Event(CustomEvent.MOUNTED))
+    }
   })
 }
 

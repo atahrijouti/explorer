@@ -17,6 +17,7 @@ export const deleteNodesBtn = document.getElementById("delete-nodes")
 export const renameBtn = document.getElementById("rename-node")
 
 export function NavigationBar() {
+  //// Event Listeners
   goUp.addEventListener("click", navigateToParent, false)
   newFolderBtn.addEventListener(
     "click",
@@ -30,11 +31,15 @@ export function NavigationBar() {
   )
   deleteNodesBtn.addEventListener("click", handleDeleteNodes, false)
   renameBtn.addEventListener("click", handleEditNode, false)
+  document.addEventListener("keyup", handleKeyUp, false)
+
+  //// ComponentDiMount
   renderBreadcrumb()
+
+  // reflect state on delete and rename button on start-up
   if (state.selectedNodesIds.length > 0) {
     deleteNodesBtn.removeAttribute("disabled")
-    state.selectedNodesIds.length === 1 &&
-      staterenameBtn.removeAttribute("disabled")
+    state.selectedNodesIds.length === 1 && renameBtn.removeAttribute("disabled")
   }
 }
 
@@ -90,6 +95,12 @@ export function navigateToParent() {
       (node) => node.id === state.currentFolder.parentId
     )
     renderExplorerNodes()
+  }
+}
+
+function handleKeyUp(e) {
+  if (e.key === "F2") {
+    handleEditNode()
   }
 }
 
