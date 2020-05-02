@@ -52,6 +52,18 @@ export function NodeComponent({
       })
     : TextLabel({ name: node.name })
 
+  if (renaming) {
+    element.listensToMount = true
+    // inside of this listener we are sure the element is mounted in the browser
+    // dom
+    element.addEventListener(
+      CustomEvent.MOUNTED,
+      () => {
+        label.focus()
+      },
+      false
+    )
+  }
   element.appendChild(label)
   return element
 }
