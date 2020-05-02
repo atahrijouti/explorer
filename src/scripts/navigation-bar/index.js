@@ -5,7 +5,7 @@ import {
   createNewNode,
   deleteSelectedNodes,
 } from "../database/queries"
-import { TYPE } from "../app/types"
+import { NodeType } from "../app/types"
 
 import "./navigation-bar.css"
 
@@ -21,12 +21,12 @@ export function NavigationBar() {
   goUp.addEventListener("click", navigateToParent, false)
   newFolderBtn.addEventListener(
     "click",
-    () => createNewNode("New folder", TYPE.FOLDER),
+    () => createNewNode("New folder", NodeType.FOLDER),
     false
   )
   newFileBtn.addEventListener(
     "click",
-    () => createNewNode("New file", TYPE.FILE),
+    () => createNewNode("New file", NodeType.FILE),
     false
   )
   deleteNodesBtn.addEventListener("click", handleDeleteNodes, false)

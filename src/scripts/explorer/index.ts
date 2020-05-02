@@ -1,11 +1,11 @@
 import { state } from "../app/state"
-import { TYPE } from "../app/types"
+import { Node, NodeType, CustomEvent } from "../app/types"
 import { renderBreadcrumb, deleteNodesBtn, renameBtn } from "../navigation-bar"
 import { NodeComponent } from "./components/node"
 
 import "./explorer.scss"
 
-export const explorer = document.querySelector("#explorer")
+export const explorer = document.querySelector("#explorer")!
 
 export function Explorer() {
   renderExplorerNodes()
@@ -20,7 +20,7 @@ export function renderExplorerNodes() {
     }
   })
 
-  explorer.replaceChild(ul, explorer.querySelector("ul"))
+  explorer.replaceChild(ul, explorer.querySelector("ul")!)
 
   renderBreadcrumb()
 }
@@ -29,14 +29,18 @@ export function renderExplorerNodes() {
  * Re-Render nodes identified by a set of nodeIds
  * @param {number[]} nodeIds
  */
-export function renderSpecificExplorerNodes(nodeIds) {
+export function renderSpecificExplorerNodes(nodeIds: number[]) {
   // generate selector to select all existing dom nodes based on nodeIds
   const selector = nodeIds.map((id) => `[data-id="${id}"]`).join(",")
-  explorer.querySelectorAll(selector).forEach((currentNodeDom) => {
+  const selectedDomNodes = Array.from(
+    explorer.querySelectorAll(selector)
+  ) as Array<HTMLLIElement>
+
+  selectedDomNodes.forEach((currentNodeDom: HTMLLIElement) => {
     const id = Number(currentNodeDom.dataset.id)
-    const node = state.nodes.find((n) => n.id === id)
+    const node = state.nodes.find((n) => n.id === id)!
     const newNodeDom = buildNode(node)
-    explorer.querySelector("ul").replaceChild(newNodeDom, currentNodeDom)
+    explorer.querySelector("ul")!.replaceChild(newNodeDom, currentNodeDom)
     // when newNodeDom has been mounted, trigger MOUNTED event on newNodeDom
     // so that newNodeDom also knows that it was mounted
     if (newNodeDom.listensToMount) {
@@ -67,7 +71,7 @@ function handleInputKeyUp(node, e) {
   }
 }
 
-function buildNode(node) {
+function buildNode(node: Node) {
   const selected = state.selectedNodesIds.find((n) => n === node.id) != null
   return NodeComponent({
     node,
@@ -85,7 +89,7 @@ function handleNodeDblClick(node, e) {
   }
   const nextId = node.id
   const clickedNode = state.nodes.find((node) => node.id === nextId)
-  if (clickedNode.type === TYPE.FOLDER) {
+  if (clickedNode.type === NodeType.FOLDER) {
     state.currentFolder = clickedNode
     renderExplorerNodes()
   } else {
