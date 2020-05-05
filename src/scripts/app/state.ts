@@ -1,6 +1,6 @@
 import { NodeType } from "./types"
 
-type ID = number | null
+export type ID = number | null
 export type Node = {
   id: ID
   name: string
@@ -36,6 +36,6 @@ export const state = {
     { id: 6, name: "Amine Tirecht.pdf", type: NodeType.FILE, parentId: 5 },
   ],
   currentFolder: rootFolder,
-  selectedNodesIds: [],
+  selectedNodesIds: [] as number[],
   renaming: false,
 }

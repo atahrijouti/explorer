@@ -1,5 +1,9 @@
-import { state, rootFolder } from "../app/state"
-import { renderExplorerNodes, rerenderSelectedNodes } from "../explorer"
+import { state, rootFolder, Node } from "../app/state"
+import {
+  explorer,
+  renderExplorerNodes,
+  rerenderSelectedNodes,
+} from "../explorer"
 import {
   findParents,
   createNewNode,
@@ -9,12 +13,12 @@ import { NodeType } from "../app/types"
 
 import "./navigation-bar.css"
 
-export const goUp = document.getElementById("go-up")
-export const breadcrumb = document.getElementById("breadcrumb")
-export const newFolderBtn = document.getElementById("new-folder")
-export const newFileBtn = document.getElementById("new-file")
-export const deleteNodesBtn = document.getElementById("delete-nodes")
-export const renameBtn = document.getElementById("rename-node")
+export const goUp = document.getElementById("go-up")!
+export const breadcrumb = document.getElementById("breadcrumb")!
+export const newFolderBtn = document.getElementById("new-folder")!
+export const newFileBtn = document.getElementById("new-file")!
+export const deleteNodesBtn = document.getElementById("delete-nodes")!
+export const renameBtn = document.getElementById("rename-node")!
 
 export function NavigationBar() {
   //// Event Listeners
@@ -49,11 +53,14 @@ export function renderBreadcrumb() {
     breadcrumbItems.push(state.currentFolder)
   }
 
-  breadcrumb.innerHTML = breadcrumbItems.reduce((accumulator, node) => {
-    return (
-      accumulator + `<li data-id="${node.id}"><span>${node.name}</span></li>`
-    )
-  }, "")
+  breadcrumb.innerHTML = breadcrumbItems.reduce<string>(
+    (accumulator, node: Node) => {
+      return (
+        accumulator + `<li data-id="${node.id}"><span>${node.name}</span></li>`
+      )
+    },
+    ""
+  )
 
   Array.from(breadcrumb.querySelectorAll("li")).forEach((node) =>
     node.addEventListener("click", respondToBreadcrumbClick)
@@ -62,7 +69,7 @@ export function renderBreadcrumb() {
 
 function handleDeleteNodes() {
   state.selectedNodesIds.forEach((id) => {
-    explorer.querySelector(`[data-id="${id}"]`).remove()
+    explorer.querySelector(`[data-id="${id}"]`)?.remove()
   })
   deleteNodesBtn.setAttribute("disabled", "disabled")
   deleteSelectedNodes()
@@ -73,15 +80,21 @@ function handleEditNode() {
   rerenderSelectedNodes()
 }
 
-function respondToBreadcrumbClick(e) {
-  const rawId = e.currentTarget.dataset.id
+function respondToBreadcrumbClick(e: MouseEvent) {
+  const currentTarget = e.currentTarget as HTMLLIElement
+  const rawId = currentTarget.dataset.id
   if (rawId === "null") {
     goToRoot()
     return
   }
 
-  const nextId = Number(e.currentTarget.dataset.id)
-  state.currentFolder = state.nodes.find((node) => node.id === nextId)
+  const nextId = Number(currentTarget.dataset.id)
+  const clickedNode = state.nodes.find((node) => node.id === nextId)
+  if (clickedNode == null) {
+    // TODO : add 404
+    return
+  }
+  state.currentFolder = clickedNode
   renderExplorerNodes()
 }
 
@@ -91,14 +104,18 @@ export function navigateToParent() {
       goToRoot()
     }
   } else {
-    state.currentFolder = state.nodes.find(
+    const clickedNode = state.nodes.find(
       (node) => node.id === state.currentFolder.parentId
     )
+    if (clickedNode == null) {
+      return
+    }
+    state.currentFolder = clickedNode
     renderExplorerNodes()
   }
 }
 
-function handleKeyUp(e) {
+function handleKeyUp(e: KeyboardEvent) {
   if (e.key === "F2") {
     handleEditNode()
   }
