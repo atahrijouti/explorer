@@ -1,4 +1,11 @@
-function InputLabel({ name, onKeyUp }) {
+import { Node } from "../../../app/state"
+import { CustomEvent } from "../../../app/types"
+
+type InputLabelProps = {
+  name: string
+  onKeyUp: (e: KeyboardEvent) => void
+}
+function InputLabel({ name, onKeyUp }: InputLabelProps): HTMLInputElement {
   const element = document.createElement("input")
   element.setAttribute("type", "text")
   element.classList.add("rename")
@@ -7,13 +14,24 @@ function InputLabel({ name, onKeyUp }) {
   return element
 }
 
-function TextLabel({ name }) {
+type TextLabelProps = {
+  name: string
+}
+function TextLabel({ name }: TextLabelProps): HTMLSpanElement {
   const element = document.createElement("span")
   element.classList.add("label")
   element.innerText = name
   return element
 }
 
+type Props = {
+  node: Node
+  selected: boolean
+  renaming: boolean
+  onKeyUp: (node: Node, e: KeyboardEvent) => void
+  onDblClick: (node: Node, e: MouseEvent) => void
+  onClick: (node: Node, e: MouseEvent) => void
+}
 export function NodeComponent({
   node,
   onDblClick,
@@ -21,10 +39,12 @@ export function NodeComponent({
   selected,
   renaming,
   onKeyUp,
-}) {
-  const element = document.createElement("li")
+}: Props) {
+  const element = document.createElement("li") as HTMLLIElement & {
+    listensToMount: boolean
+  }
   element.classList.add("node")
-  element.dataset.id = node.id
+  element.dataset.id = `${node.id}`
 
   selected && element.classList.add("selected")
 
