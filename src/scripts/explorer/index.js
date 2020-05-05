@@ -1,5 +1,5 @@
 import { state } from "../app/state"
-import { TYPE } from "../app/types"
+import { NodeType } from "../app/types"
 import { renderBreadcrumb, deleteNodesBtn, renameBtn } from "../navigation-bar"
 import { NodeComponent } from "./components/node"
 
@@ -85,7 +85,7 @@ function handleNodeDblClick(node, e) {
   }
   const nextId = node.id
   const clickedNode = state.nodes.find((node) => node.id === nextId)
-  if (clickedNode.type === TYPE.FOLDER) {
+  if (clickedNode.type === NodeType.FOLDER) {
     state.currentFolder = clickedNode
     renderExplorerNodes()
   } else {
