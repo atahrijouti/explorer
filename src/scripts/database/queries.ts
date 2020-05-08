@@ -30,9 +30,7 @@ export function createNewNode(name: string, type: NodeType) {
   explorer.querySelector("ul")!.appendChild(node)
   // when newNodeDom has been mounted, trigger MOUNTED event on newNodeDom
   // so that newNodeDom also knows that it was mounted
-  if (node.listensToMount) {
-    node.dispatchEvent(new Event(CustomEvent.MOUNTED))
-  }
+  node.dispatchEvent(new Event(CustomEvent.MOUNTED))
   state.nextId++
 }
 

@@ -31,7 +31,7 @@ export function renderExplorerNodes() {
  * @param {number[]} nodeIds
  */
 export function renderSpecificExplorerNodes(nodeIds: number[]) {
-  if(nodeIds.length === 0) {
+  if (nodeIds.length === 0) {
     return
   }
   // generate selector to select all existing dom nodes based on nodeIds
@@ -43,15 +43,13 @@ export function renderSpecificExplorerNodes(nodeIds: number[]) {
       const id = Number(currentNodeDom.dataset.id)
       const node = state.nodes.find((n) => n.id === id)
       if (node == null) {
-        return;
+        return
       }
       const newNodeDom = buildNode(node)
       explorer.querySelector("ul")!.replaceChild(newNodeDom, currentNodeDom)
       // when newNodeDom has been mounted, trigger MOUNTED event on newNodeDom
       // so that newNodeDom also knows that it was mounted
-      if (newNodeDom.listensToMount) {
-        newNodeDom.dispatchEvent(new Event(CustomEvent.MOUNTED))
-      }
+      newNodeDom.dispatchEvent(new Event(CustomEvent.MOUNTED))
     })
 }
 
@@ -108,7 +106,10 @@ function handleNodeDblClick(node: Node, e: MouseEvent) {
 }
 
 function handleNodeClick(node: Node, e: MouseEvent) {
-  if ((e.target as HTMLElement).classList.contains("rename") || node.id == null) {
+  if (
+    (e.target as HTMLElement).classList.contains("rename") ||
+    node.id == null
+  ) {
     return
   }
   const previousSelection = [...state.selectedNodesIds]
