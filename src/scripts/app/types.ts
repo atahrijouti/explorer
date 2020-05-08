@@ -3,6 +3,8 @@ export enum NodeType {
   FILE = "FILE",
 }
 
-export enum CustomEvent {
+export enum AppEvent {
   MOUNTED = "e-mounted",
+  SELECTION_CHANGED = "e-selection-changed",
+  FOLDER_CHANGED = "e-folder-changed",
 }

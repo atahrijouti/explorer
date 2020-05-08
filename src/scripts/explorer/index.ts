@@ -1,29 +1,30 @@
 import { Node, state } from "../app/state"
-import { CustomEvent, NodeType } from "../app/types"
-import { renderBreadcrumb, deleteNodesBtn, renameBtn } from "../navigation-bar"
+import { AppEvent, NodeType } from "../app/types"
+import { deleteNodesBtn, renameBtn } from "../navigation-bar"
 import { NodeComponent } from "./components/node"
 
 import "./explorer.scss"
+import { appElement } from "../app"
 
 // TODO : figure out how to get rid of `!`
 export const explorer = document.querySelector("#explorer")!
 
 export function Explorer() {
-  renderExplorerNodes()
+  appElement.addEventListener(AppEvent.FOLDER_CHANGED, (e) => {
+    renderExplorerNodes((e as CustomEvent<Node>).detail)
+  })
 }
 
-export function renderExplorerNodes() {
+export function renderExplorerNodes(currentFolder: Node) {
   const ul = document.createElement("ul")
 
   state.nodes.forEach((node) => {
-    if (node.parentId === state.currentFolder.id) {
+    if (node.parentId === currentFolder.id) {
       ul.appendChild(buildNode(node))
     }
   })
 
   explorer.replaceChild(ul, explorer.querySelector("ul")!)
-
-  renderBreadcrumb()
 }
 
 /**
@@ -49,7 +50,7 @@ export function renderSpecificExplorerNodes(nodeIds: number[]) {
       explorer.querySelector("ul")!.replaceChild(newNodeDom, currentNodeDom)
       // when newNodeDom has been mounted, trigger MOUNTED event on newNodeDom
       // so that newNodeDom also knows that it was mounted
-      newNodeDom.dispatchEvent(new Event(CustomEvent.MOUNTED))
+      newNodeDom.dispatchEvent(new Event(AppEvent.MOUNTED))
     })
 }
 
@@ -96,7 +97,12 @@ function handleNodeDblClick(node: Node, e: MouseEvent) {
   }
   if (clickedNode.type === NodeType.FOLDER) {
     state.currentFolder = clickedNode
-    renderExplorerNodes()
+
+    appElement.dispatchEvent(
+      new CustomEvent(AppEvent.FOLDER_CHANGED, {
+        detail: state.currentFolder,
+      })
+    )
   } else {
     console.log(`${clickedNode.name} is a file : OPEN`)
   }

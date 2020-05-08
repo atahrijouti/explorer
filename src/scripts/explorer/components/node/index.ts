@@ -1,5 +1,5 @@
 import { Node } from "../../../app/state"
-import { CustomEvent } from "../../../app/types"
+import { AppEvent } from "../../../app/types"
 
 type InputLabelProps = {
   name: string
@@ -74,7 +74,7 @@ export function NodeComponent({
     // inside of this listener we are sure the element is mounted in the browser
     // dom
     element.addEventListener(
-      CustomEvent.MOUNTED,
+      AppEvent.MOUNTED,
       () => {
         label.focus()
       },
