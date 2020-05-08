@@ -31,6 +31,9 @@ export function renderExplorerNodes() {
  * @param {number[]} nodeIds
  */
 export function renderSpecificExplorerNodes(nodeIds: number[]) {
+  if(nodeIds.length === 0) {
+    return
+  }
   // generate selector to select all existing dom nodes based on nodeIds
   const selector = nodeIds.map((id) => `[data-id="${id}"]`).join(",")
 
@@ -52,7 +55,7 @@ export function renderSpecificExplorerNodes(nodeIds: number[]) {
     })
 }
 
-export function rerenderSelectedNodes() {
+export function reRenderSelectedNodes() {
   renderSpecificExplorerNodes(state.selectedNodesIds)
 }
 
@@ -61,18 +64,18 @@ function handleInputKeyUp(node: Node, e: KeyboardEvent) {
     case "Enter":
       node.name = (e.currentTarget as HTMLInputElement).value
       state.renaming = false
-      rerenderSelectedNodes()
+      reRenderSelectedNodes()
       break
     case "Escape":
       state.renaming = false
-      rerenderSelectedNodes()
+      reRenderSelectedNodes()
       break
     default:
       return true
   }
 }
 
-function buildNode(node: Node) {
+export function buildNode(node: Node) {
   const selected = state.selectedNodesIds.find((n) => n === node.id) != null
   return NodeComponent({
     node,

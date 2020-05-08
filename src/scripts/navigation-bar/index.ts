@@ -2,7 +2,7 @@ import { state, rootFolder, Node } from "../app/state"
 import {
   explorer,
   renderExplorerNodes,
-  rerenderSelectedNodes,
+  reRenderSelectedNodes,
 } from "../explorer"
 import {
   findParents,
@@ -76,8 +76,9 @@ function handleDeleteNodes() {
 }
 
 function handleEditNode() {
+  // TODO : Make sure not to get into renaming mode when nothing is selected
   state.renaming = true
-  rerenderSelectedNodes()
+  reRenderSelectedNodes()
 }
 
 function respondToBreadcrumbClick(e: MouseEvent) {
