@@ -1,4 +1,4 @@
-import { state, rootFolder, Node } from "../app/state"
+import { state, rootFolder, Node, setCurrentFolder } from "../app/state"
 import {
   explorer,
   reRenderSelectedNodes,
@@ -12,7 +12,6 @@ import { AppEvent, NodeType } from "../app/types"
 
 import "./navigation-bar.css"
 import { appElement } from "../app"
-import { dispatch } from "../app/helpers"
 
 export const goUp = document.getElementById("go-up")!
 export const breadcrumb = document.getElementById("breadcrumb")!
@@ -96,8 +95,7 @@ function respondToBreadcrumbClick(e: MouseEvent) {
     // TODO : add 404
     return
   }
-  state.currentFolder = clickedNode
-  dispatch(appElement, AppEvent.FOLDER_CHANGED, state.currentFolder)
+  setCurrentFolder(clickedNode)
 }
 
 export function navigateToParent() {
@@ -112,8 +110,7 @@ export function navigateToParent() {
     if (clickedNode == null) {
       return
     }
-    state.currentFolder = clickedNode
-    dispatch(appElement, AppEvent.FOLDER_CHANGED, state.currentFolder)
+    setCurrentFolder(clickedNode)
   }
 }
 
@@ -124,6 +121,5 @@ function handleKeyUp(e: KeyboardEvent) {
 }
 
 function goToRoot() {
-  state.currentFolder = rootFolder
-  dispatch(appElement, AppEvent.FOLDER_CHANGED, rootFolder)
+  setCurrentFolder(rootFolder)
 }

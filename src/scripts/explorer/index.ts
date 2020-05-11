@@ -1,4 +1,4 @@
-import { Node, rootFolder, state } from "../app/state"
+import { Node, setCurrentFolder, state } from "../app/state"
 import { AppEvent, NodeType } from "../app/types"
 import { deleteNodesBtn, renameBtn } from "../navigation-bar"
 import { NodeComponent } from "./components/node"
@@ -97,8 +97,7 @@ function handleNodeDblClick(node: Node, e: MouseEvent) {
     return
   }
   if (clickedNode.type === NodeType.FOLDER) {
-    state.currentFolder = clickedNode
-    dispatch(appElement, AppEvent.FOLDER_CHANGED, state.currentFolder)
+    setCurrentFolder(clickedNode)
   } else {
     console.log(`${clickedNode.name} is a file : OPEN`)
   }

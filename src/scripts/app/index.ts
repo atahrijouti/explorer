@@ -1,8 +1,6 @@
 import { Explorer } from "../explorer"
 import { NavigationBar } from "../navigation-bar"
-import { AppEvent } from "./types"
-import { rootFolder } from "./state"
-import { dispatch } from "./helpers"
+import { rootFolder, setCurrentFolder } from "./state"
 
 import "./app.css"
 
@@ -13,6 +11,6 @@ export function App() {
   Explorer()
 
   //////////
-  // App has been setup, time to trigger AppEvent.FOLDER_CHANGED
-  dispatch(appElement, AppEvent.FOLDER_CHANGED, rootFolder)
+  // this also takes care of updating the explorer nodes that are rendered
+  setCurrentFolder(rootFolder)
 }

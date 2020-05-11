@@ -1,4 +1,6 @@
-import { NodeType } from "./types"
+import { AppEvent, NodeType } from "./types"
+import { dispatch } from "./helpers"
+import { appElement } from "./index"
 
 export type ID = number | null
 export type Node = {
@@ -22,7 +24,7 @@ type State = {
   selectedNodesIds: number[]
   renaming: boolean
 }
-export const state = {
+export const state: State = {
   nextId: 9,
   breadcrumb: [{ name: rootFolder.name, id: null }],
   nodes: [
@@ -38,4 +40,9 @@ export const state = {
   currentFolder: rootFolder,
   selectedNodesIds: [] as number[],
   renaming: false,
+}
+
+export const setCurrentFolder = (folder: Node) => {
+  state.currentFolder = folder
+  dispatch(appElement, AppEvent.FOLDER_CHANGED, folder)
 }
