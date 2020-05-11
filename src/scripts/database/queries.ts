@@ -1,6 +1,7 @@
 import { ID, Node, rootFolder, state } from "../app/state"
 import { buildNode, explorer, renderSpecificExplorerNodes } from "../explorer"
 import { AppEvent, NodeType } from "../app/types"
+import { dispatch } from "../app/helpers"
 
 export function findParents(lookupNode: Node): Node[] {
   if (lookupNode.parentId === null) {
@@ -30,7 +31,7 @@ export function createNewNode(name: string, type: NodeType) {
   explorer.querySelector("ul")!.appendChild(node)
   // when newNodeDom has been mounted, trigger MOUNTED event on newNodeDom
   // so that newNodeDom also knows that it was mounted
-  node.dispatchEvent(new Event(AppEvent.MOUNTED))
+  dispatch(node, AppEvent.MOUNTED)
   state.nextId++
 }
 

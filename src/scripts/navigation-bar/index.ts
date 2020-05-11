@@ -12,6 +12,7 @@ import { AppEvent, NodeType } from "../app/types"
 
 import "./navigation-bar.css"
 import { appElement } from "../app"
+import { dispatch } from "../app/helpers"
 
 export const goUp = document.getElementById("go-up")!
 export const breadcrumb = document.getElementById("breadcrumb")!
@@ -96,11 +97,7 @@ function respondToBreadcrumbClick(e: MouseEvent) {
     return
   }
   state.currentFolder = clickedNode
-  appElement.dispatchEvent(
-    new CustomEvent(AppEvent.FOLDER_CHANGED, {
-      detail: state.currentFolder,
-    })
-  )
+  dispatch(appElement, AppEvent.FOLDER_CHANGED, state.currentFolder)
 }
 
 export function navigateToParent() {
@@ -116,11 +113,7 @@ export function navigateToParent() {
       return
     }
     state.currentFolder = clickedNode
-    appElement.dispatchEvent(
-      new CustomEvent(AppEvent.FOLDER_CHANGED, {
-        detail: state.currentFolder,
-      })
-    )
+    dispatch(appElement, AppEvent.FOLDER_CHANGED, state.currentFolder)
   }
 }
 
@@ -132,9 +125,5 @@ function handleKeyUp(e: KeyboardEvent) {
 
 function goToRoot() {
   state.currentFolder = rootFolder
-  appElement.dispatchEvent(
-    new CustomEvent(AppEvent.FOLDER_CHANGED, {
-      detail: rootFolder,
-    })
-  )
+  dispatch(appElement, AppEvent.FOLDER_CHANGED, rootFolder)
 }

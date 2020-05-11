@@ -1,10 +1,11 @@
-import { Node, state } from "../app/state"
+import { Node, rootFolder, state } from "../app/state"
 import { AppEvent, NodeType } from "../app/types"
 import { deleteNodesBtn, renameBtn } from "../navigation-bar"
 import { NodeComponent } from "./components/node"
 
 import "./explorer.scss"
 import { appElement } from "../app"
+import { dispatch } from "../app/helpers"
 
 // TODO : figure out how to get rid of `!`
 export const explorer = document.querySelector("#explorer")!
@@ -50,7 +51,7 @@ export function renderSpecificExplorerNodes(nodeIds: number[]) {
       explorer.querySelector("ul")!.replaceChild(newNodeDom, currentNodeDom)
       // when newNodeDom has been mounted, trigger MOUNTED event on newNodeDom
       // so that newNodeDom also knows that it was mounted
-      newNodeDom.dispatchEvent(new Event(AppEvent.MOUNTED))
+      dispatch(newNodeDom, AppEvent.MOUNTED)
     })
 }
 
@@ -97,12 +98,7 @@ function handleNodeDblClick(node: Node, e: MouseEvent) {
   }
   if (clickedNode.type === NodeType.FOLDER) {
     state.currentFolder = clickedNode
-
-    appElement.dispatchEvent(
-      new CustomEvent(AppEvent.FOLDER_CHANGED, {
-        detail: state.currentFolder,
-      })
-    )
+    dispatch(appElement, AppEvent.FOLDER_CHANGED, state.currentFolder)
   } else {
     console.log(`${clickedNode.name} is a file : OPEN`)
   }
