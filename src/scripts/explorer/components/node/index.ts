@@ -1,5 +1,5 @@
 import { Node } from "../../../app/state"
-import { CustomEvent } from "../../../app/types"
+import { AppEvent } from "../../../app/types"
 
 type InputLabelProps = {
   name: string
@@ -40,9 +40,7 @@ export function NodeComponent({
   renaming,
   onKeyUp,
 }: Props) {
-  const element = document.createElement("li") as HTMLLIElement & {
-    listensToMount: boolean
-  }
+  const element = document.createElement("li") as HTMLLIElement
   element.classList.add("node")
   element.dataset.id = `${node.id}`
 
@@ -73,11 +71,10 @@ export function NodeComponent({
     : TextLabel({ name: node.name })
 
   if (renaming) {
-    element.listensToMount = true
     // inside of this listener we are sure the element is mounted in the browser
     // dom
     element.addEventListener(
-      CustomEvent.MOUNTED,
+      AppEvent.MOUNTED,
       () => {
         label.focus()
       },

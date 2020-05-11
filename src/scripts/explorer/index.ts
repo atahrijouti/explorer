@@ -1,29 +1,31 @@
-import { Node, state } from "../app/state"
-import { CustomEvent, NodeType } from "../app/types"
-import { renderBreadcrumb, deleteNodesBtn, renameBtn } from "../navigation-bar"
+import { Node, rootFolder, state } from "../app/state"
+import { AppEvent, NodeType } from "../app/types"
+import { deleteNodesBtn, renameBtn } from "../navigation-bar"
 import { NodeComponent } from "./components/node"
 
 import "./explorer.scss"
+import { appElement } from "../app"
+import { dispatch } from "../app/helpers"
 
 // TODO : figure out how to get rid of `!`
 export const explorer = document.querySelector("#explorer")!
 
 export function Explorer() {
-  renderExplorerNodes()
+  appElement.addEventListener(AppEvent.FOLDER_CHANGED, (e) => {
+    renderExplorerNodes((e as CustomEvent<Node>).detail)
+  })
 }
 
-export function renderExplorerNodes() {
+export function renderExplorerNodes(currentFolder: Node) {
   const ul = document.createElement("ul")
 
   state.nodes.forEach((node) => {
-    if (node.parentId === state.currentFolder.id) {
+    if (node.parentId === currentFolder.id) {
       ul.appendChild(buildNode(node))
     }
   })
 
   explorer.replaceChild(ul, explorer.querySelector("ul")!)
-
-  renderBreadcrumb()
 }
 
 /**
@@ -31,6 +33,9 @@ export function renderExplorerNodes() {
  * @param {number[]} nodeIds
  */
 export function renderSpecificExplorerNodes(nodeIds: number[]) {
+  if (nodeIds.length === 0) {
+    return
+  }
   // generate selector to select all existing dom nodes based on nodeIds
   const selector = nodeIds.map((id) => `[data-id="${id}"]`).join(",")
 
@@ -40,19 +45,17 @@ export function renderSpecificExplorerNodes(nodeIds: number[]) {
       const id = Number(currentNodeDom.dataset.id)
       const node = state.nodes.find((n) => n.id === id)
       if (node == null) {
-        return;
+        return
       }
       const newNodeDom = buildNode(node)
       explorer.querySelector("ul")!.replaceChild(newNodeDom, currentNodeDom)
       // when newNodeDom has been mounted, trigger MOUNTED event on newNodeDom
       // so that newNodeDom also knows that it was mounted
-      if (newNodeDom.listensToMount) {
-        newNodeDom.dispatchEvent(new Event(CustomEvent.MOUNTED))
-      }
+      dispatch(newNodeDom, AppEvent.MOUNTED)
     })
 }
 
-export function rerenderSelectedNodes() {
+export function reRenderSelectedNodes() {
   renderSpecificExplorerNodes(state.selectedNodesIds)
 }
 
@@ -61,18 +64,18 @@ function handleInputKeyUp(node: Node, e: KeyboardEvent) {
     case "Enter":
       node.name = (e.currentTarget as HTMLInputElement).value
       state.renaming = false
-      rerenderSelectedNodes()
+      reRenderSelectedNodes()
       break
     case "Escape":
       state.renaming = false
-      rerenderSelectedNodes()
+      reRenderSelectedNodes()
       break
     default:
       return true
   }
 }
 
-function buildNode(node: Node) {
+export function buildNode(node: Node) {
   const selected = state.selectedNodesIds.find((n) => n === node.id) != null
   return NodeComponent({
     node,
@@ -95,7 +98,7 @@ function handleNodeDblClick(node: Node, e: MouseEvent) {
   }
   if (clickedNode.type === NodeType.FOLDER) {
     state.currentFolder = clickedNode
-    renderExplorerNodes()
+    dispatch(appElement, AppEvent.FOLDER_CHANGED, state.currentFolder)
   } else {
     console.log(`${clickedNode.name} is a file : OPEN`)
   }
@@ -105,7 +108,10 @@ function handleNodeDblClick(node: Node, e: MouseEvent) {
 }
 
 function handleNodeClick(node: Node, e: MouseEvent) {
-  if ((e.target as HTMLElement).classList.contains("rename") || node.id == null) {
+  if (
+    (e.target as HTMLElement).classList.contains("rename") ||
+    node.id == null
+  ) {
     return
   }
   const previousSelection = [...state.selectedNodesIds]

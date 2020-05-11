@@ -1,17 +1,18 @@
 import { state, rootFolder, Node } from "../app/state"
 import {
   explorer,
-  renderExplorerNodes,
-  rerenderSelectedNodes,
+  reRenderSelectedNodes,
 } from "../explorer"
 import {
   findParents,
   createNewNode,
   deleteSelectedNodes,
 } from "../database/queries"
-import { NodeType } from "../app/types"
+import { AppEvent, NodeType } from "../app/types"
 
 import "./navigation-bar.css"
+import { appElement } from "../app"
+import { dispatch } from "../app/helpers"
 
 export const goUp = document.getElementById("go-up")!
 export const breadcrumb = document.getElementById("breadcrumb")!
@@ -36,9 +37,9 @@ export function NavigationBar() {
   deleteNodesBtn.addEventListener("click", handleDeleteNodes, false)
   renameBtn.addEventListener("click", handleEditNode, false)
   document.addEventListener("keyup", handleKeyUp, false)
-
-  //// ComponentDiMount
-  renderBreadcrumb()
+  appElement.addEventListener(AppEvent.FOLDER_CHANGED, (e) => {
+    renderBreadcrumb((e as CustomEvent<Node>).detail)
+  })
 
   // reflect state on delete and rename button on start-up
   if (state.selectedNodesIds.length > 0) {
@@ -47,8 +48,8 @@ export function NavigationBar() {
   }
 }
 
-export function renderBreadcrumb() {
-  const breadcrumbItems = findParents(state.currentFolder)
+export function renderBreadcrumb(currentFolder: Node) {
+  const breadcrumbItems = findParents(currentFolder)
   if (state.currentFolder !== rootFolder) {
     breadcrumbItems.push(state.currentFolder)
   }
@@ -76,8 +77,9 @@ function handleDeleteNodes() {
 }
 
 function handleEditNode() {
+  // TODO : Make sure not to get into renaming mode when nothing is selected
   state.renaming = true
-  rerenderSelectedNodes()
+  reRenderSelectedNodes()
 }
 
 function respondToBreadcrumbClick(e: MouseEvent) {
@@ -95,7 +97,7 @@ function respondToBreadcrumbClick(e: MouseEvent) {
     return
   }
   state.currentFolder = clickedNode
-  renderExplorerNodes()
+  dispatch(appElement, AppEvent.FOLDER_CHANGED, state.currentFolder)
 }
 
 export function navigateToParent() {
@@ -111,7 +113,7 @@ export function navigateToParent() {
       return
     }
     state.currentFolder = clickedNode
-    renderExplorerNodes()
+    dispatch(appElement, AppEvent.FOLDER_CHANGED, state.currentFolder)
   }
 }
 
@@ -123,5 +125,5 @@ function handleKeyUp(e: KeyboardEvent) {
 
 function goToRoot() {
   state.currentFolder = rootFolder
-  renderExplorerNodes()
+  dispatch(appElement, AppEvent.FOLDER_CHANGED, rootFolder)
 }
