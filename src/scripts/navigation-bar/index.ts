@@ -1,8 +1,12 @@
-import { state, rootFolder, Node, setCurrentFolder } from "../app/state"
 import {
-  explorer,
-  reRenderSelectedNodes,
-} from "../explorer"
+  state,
+  rootFolder,
+  Node,
+  setCurrentFolder,
+  setSelectedNodeIds,
+  SelectionChange,
+} from "../app/state"
+import { explorer } from "../explorer"
 import {
   findParents,
   createNewNode,
@@ -12,13 +16,14 @@ import { AppEvent, NodeType } from "../app/types"
 
 import "./navigation-bar.css"
 import { appElement } from "../app"
+import { dispatch } from "../app/helpers"
 
 export const goUp = document.getElementById("go-up")!
 export const breadcrumb = document.getElementById("breadcrumb")!
 export const newFolderBtn = document.getElementById("new-folder")!
 export const newFileBtn = document.getElementById("new-file")!
-export const deleteNodesBtn = document.getElementById("delete-nodes")!
-export const renameBtn = document.getElementById("rename-node")!
+export const deleteNodeBtn = document.getElementById("delete-nodes")!
+export const renameNodeBtn = document.getElementById("rename-node")!
 
 export function NavigationBar() {
   //// Event Listeners
@@ -33,18 +38,14 @@ export function NavigationBar() {
     () => createNewNode("New file", NodeType.FILE),
     false
   )
-  deleteNodesBtn.addEventListener("click", handleDeleteNodes, false)
-  renameBtn.addEventListener("click", handleEditNode, false)
+  deleteNodeBtn.addEventListener("click", handleDeleteNodes, false)
+  renameNodeBtn.addEventListener("click", handleEditNode, false)
   document.addEventListener("keyup", handleKeyUp, false)
-  appElement.addEventListener(AppEvent.FOLDER_CHANGED, (e) => {
-    renderBreadcrumb((e as CustomEvent<Node>).detail)
-  })
-
-  // reflect state on delete and rename button on start-up
-  if (state.selectedNodesIds.length > 0) {
-    deleteNodesBtn.removeAttribute("disabled")
-    state.selectedNodesIds.length === 1 && renameBtn.removeAttribute("disabled")
-  }
+  appElement.addEventListener(AppEvent.FOLDER_CHANGED, handleFolderChanged)
+  appElement.addEventListener(
+    AppEvent.SELECTION_CHANGED,
+    handleSelectionChanged
+  )
 }
 
 export function renderBreadcrumb(currentFolder: Node) {
@@ -68,17 +69,36 @@ export function renderBreadcrumb(currentFolder: Node) {
 }
 
 function handleDeleteNodes() {
-  state.selectedNodesIds.forEach((id) => {
+  state.selectedNodeIds.forEach((id) => {
     explorer.querySelector(`[data-id="${id}"]`)?.remove()
   })
-  deleteNodesBtn.setAttribute("disabled", "disabled")
+  deleteNodeBtn.setAttribute("disabled", "disabled")
+  setSelectedNodeIds([])
   deleteSelectedNodes()
 }
 
 function handleEditNode() {
   // TODO : Make sure not to get into renaming mode when nothing is selected
-  state.renaming = true
-  reRenderSelectedNodes()
+  state.isRenaming = true
+  dispatch(appElement, AppEvent.SELECTION_CHANGED, [
+    state.selectedNodeIds,
+    state.selectedNodeIds,
+  ])
+}
+
+function handleFolderChanged(e: Event) {
+  renderBreadcrumb((e as CustomEvent<Node>).detail)
+}
+
+function handleSelectionChanged(e: Event) {
+  const [selectedIds] = (e as CustomEvent<SelectionChange>).detail
+  if (selectedIds.length == 1) {
+    deleteNodeBtn.removeAttribute("disabled")
+    renameNodeBtn.removeAttribute("disabled")
+  } else {
+    deleteNodeBtn.setAttribute("disabled", "disabled")
+    renameNodeBtn.setAttribute("disabled", "disabled")
+  }
 }
 
 function respondToBreadcrumbClick(e: MouseEvent) {

@@ -1,6 +1,11 @@
-import { Node, setCurrentFolder, state } from "../app/state"
+import {
+  Node,
+  SelectionChange,
+  setCurrentFolder,
+  setSelectedNodeIds,
+  state,
+} from "../app/state"
 import { AppEvent, NodeType } from "../app/types"
-import { deleteNodesBtn, renameBtn } from "../navigation-bar"
 import { NodeComponent } from "./components/node"
 
 import "./explorer.scss"
@@ -13,6 +18,72 @@ export const explorer = document.querySelector("#explorer")!
 export function Explorer() {
   appElement.addEventListener(AppEvent.FOLDER_CHANGED, (e) => {
     renderExplorerNodes((e as CustomEvent<Node>).detail)
+  })
+  appElement.addEventListener(AppEvent.SELECTION_CHANGED, (e) => {
+    const [current, previous] = (e as CustomEvent<SelectionChange>).detail
+    renderSpecificExplorerNodes([...previous, ...current])
+  })
+}
+
+function handleInputKeyUp(node: Node, e: KeyboardEvent) {
+  switch (e.key) {
+    case "Enter":
+      node.name = (e.currentTarget as HTMLInputElement).value
+      state.isRenaming = false
+      setSelectedNodeIds(state.selectedNodeIds)
+      break
+    case "Escape":
+      state.isRenaming = false
+      setSelectedNodeIds(state.selectedNodeIds)
+      break
+    default:
+      return true
+  }
+}
+
+function handleNodeDblClick(node: Node, e: MouseEvent) {
+  if ((e.target as HTMLElement).classList.contains("rename")) {
+    return
+  }
+  const nextId = node.id
+  const clickedNode = state.nodes.find((node) => node.id === nextId)
+  if (clickedNode == null) {
+    return
+  }
+  if (clickedNode.type === NodeType.FOLDER) {
+    setCurrentFolder(clickedNode)
+  } else {
+    console.log(`${clickedNode.name} is a file : OPEN`)
+  }
+  state.isRenaming = false
+}
+
+function handleNodeClick(node: Node, e: MouseEvent) {
+  if (
+    (e.target as HTMLElement).classList.contains("rename") ||
+    node.id == null
+  ) {
+    return
+  }
+  if (state.selectedNodeIds.find((id) => id === node.id)) {
+    setSelectedNodeIds([])
+  } else {
+    setSelectedNodeIds([node.id])
+    state.isRenaming = false
+  }
+}
+
+/////// RENDER SECTION
+
+export function buildNode(node: Node) {
+  const isSelected = state.selectedNodeIds.find((n) => n === node.id) != null
+  return NodeComponent({
+    node,
+    isSelected,
+    isRenaming: state.isRenaming && isSelected,
+    onClick: handleNodeClick,
+    onDblClick: handleNodeDblClick,
+    onKeyUp: handleInputKeyUp,
   })
 }
 
@@ -53,78 +124,4 @@ export function renderSpecificExplorerNodes(nodeIds: number[]) {
       // so that newNodeDom also knows that it was mounted
       dispatch(newNodeDom, AppEvent.MOUNTED)
     })
-}
-
-export function reRenderSelectedNodes() {
-  renderSpecificExplorerNodes(state.selectedNodesIds)
-}
-
-function handleInputKeyUp(node: Node, e: KeyboardEvent) {
-  switch (e.key) {
-    case "Enter":
-      node.name = (e.currentTarget as HTMLInputElement).value
-      state.renaming = false
-      reRenderSelectedNodes()
-      break
-    case "Escape":
-      state.renaming = false
-      reRenderSelectedNodes()
-      break
-    default:
-      return true
-  }
-}
-
-export function buildNode(node: Node) {
-  const selected = state.selectedNodesIds.find((n) => n === node.id) != null
-  return NodeComponent({
-    node,
-    onDblClick: handleNodeDblClick,
-    onClick: handleNodeClick,
-    selected,
-    renaming: state.renaming && selected,
-    onKeyUp: handleInputKeyUp,
-  })
-}
-
-function handleNodeDblClick(node: Node, e: MouseEvent) {
-  if ((e.target as HTMLElement).classList.contains("rename")) {
-    return
-  }
-  const nextId = node.id
-  const clickedNode = state.nodes.find((node) => node.id === nextId)
-  if (clickedNode == null) {
-    return
-  }
-  if (clickedNode.type === NodeType.FOLDER) {
-    setCurrentFolder(clickedNode)
-  } else {
-    console.log(`${clickedNode.name} is a file : OPEN`)
-  }
-  deleteNodesBtn.removeAttribute("disabled")
-  state.selectedNodesIds.length === 1 && renameBtn.removeAttribute("disabled")
-  state.renaming = false
-}
-
-function handleNodeClick(node: Node, e: MouseEvent) {
-  if (
-    (e.target as HTMLElement).classList.contains("rename") ||
-    node.id == null
-  ) {
-    return
-  }
-  const previousSelection = [...state.selectedNodesIds]
-
-  if (state.selectedNodesIds.find((id) => id === node.id)) {
-    state.selectedNodesIds = []
-    deleteNodesBtn.setAttribute("disabled", "disabled")
-    renameBtn.setAttribute("disabled", "disabled")
-  } else {
-    state.selectedNodesIds = [node.id]
-    deleteNodesBtn.removeAttribute("disabled")
-    state.selectedNodesIds.length === 1 && renameBtn.removeAttribute("disabled")
-    state.renaming = false
-  }
-
-  renderSpecificExplorerNodes([...previousSelection, ...state.selectedNodesIds])
 }

@@ -21,8 +21,8 @@ type State = {
   breadcrumb: Array<Pick<Node, "id" | "name">>
   nodes: Node[]
   currentFolder: Node
-  selectedNodesIds: number[]
-  renaming: boolean
+  selectedNodeIds: number[]
+  isRenaming: boolean
 }
 export const state: State = {
   nextId: 9,
@@ -38,11 +38,22 @@ export const state: State = {
     { id: 6, name: "Amine Tirecht.pdf", type: NodeType.FILE, parentId: 5 },
   ],
   currentFolder: rootFolder,
-  selectedNodesIds: [] as number[],
-  renaming: false,
+  selectedNodeIds: [] as number[],
+  isRenaming: false,
 }
 
 export const setCurrentFolder = (folder: Node) => {
   state.currentFolder = folder
   dispatch(appElement, AppEvent.FOLDER_CHANGED, folder)
+  setSelectedNodeIds([])
+}
+
+export type SelectionChange = Array<number[]>
+export const setSelectedNodeIds = (ids: number[]) => {
+  const previous = [...state.selectedNodeIds]
+  state.selectedNodeIds = ids
+  dispatch(appElement, AppEvent.SELECTION_CHANGED, <SelectionChange>[
+    state.selectedNodeIds,
+    previous
+  ])
 }

@@ -1,7 +1,9 @@
-import { ID, Node, rootFolder, state } from "../app/state"
+import { ID, Node, rootFolder, setSelectedNodeIds, state } from "../app/state"
 import { buildNode, explorer, renderSpecificExplorerNodes } from "../explorer"
 import { AppEvent, NodeType } from "../app/types"
 import { dispatch } from "../app/helpers"
+
+// TODO : Move dom related functions out of this file
 
 export function findParents(lookupNode: Node): Node[] {
   if (lookupNode.parentId === null) {
@@ -13,8 +15,9 @@ export function findParents(lookupNode: Node): Node[] {
 
 export function createNewNode(name: string, type: NodeType) {
   /// unselect selected
-  const previousSelection = [...state.selectedNodesIds]
-  state.selectedNodesIds = []
+  const previousSelection = [...state.selectedNodeIds]
+  // TODO : investigate a better approach for not triggering selection changed event twice
+  state.selectedNodeIds = []
   renderSpecificExplorerNodes(previousSelection)
 
   const suitableName = getSuitableName(name, type, state.currentFolder.id)
@@ -25,22 +28,22 @@ export function createNewNode(name: string, type: NodeType) {
     parentId: state.currentFolder.id,
   }
   state.nodes.push(newlyCreatedNode)
-  state.renaming = true
-  state.selectedNodesIds = [newlyCreatedNode.id]
+  state.isRenaming = true
   const node = buildNode(newlyCreatedNode)
   explorer.querySelector("ul")!.appendChild(node)
+  state.nextId++
+
+  setSelectedNodeIds([newlyCreatedNode.id])
   // when newNodeDom has been mounted, trigger MOUNTED event on newNodeDom
   // so that newNodeDom also knows that it was mounted
   dispatch(node, AppEvent.MOUNTED)
-  state.nextId++
 }
 
 export function deleteSelectedNodes() {
-  deleteNode(state.selectedNodesIds)
-  state.selectedNodesIds = []
+  deleteNodes(state.selectedNodeIds)
 }
 
-function deleteNode(ids: number[]) {
+function deleteNodes(ids: number[]) {
   const buffer = [...ids]
 
   while (buffer.length > 0) {
@@ -49,7 +52,7 @@ function deleteNode(ids: number[]) {
 
     // find children of the current node
     const children = state.nodes.reduce<number[]>(function (acc, node) {
-      if (node.parentId === head) {
+      if (node.parentId === head && node.id != null) {
         acc.push(node.id)
       }
       return acc

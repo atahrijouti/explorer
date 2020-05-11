@@ -26,8 +26,8 @@ function TextLabel({ name }: TextLabelProps): HTMLSpanElement {
 
 type Props = {
   node: Node
-  selected: boolean
-  renaming: boolean
+  isSelected: boolean
+  isRenaming: boolean
   onKeyUp: (node: Node, e: KeyboardEvent) => void
   onDblClick: (node: Node, e: MouseEvent) => void
   onClick: (node: Node, e: MouseEvent) => void
@@ -36,15 +36,15 @@ export function NodeComponent({
   node,
   onDblClick,
   onClick,
-  selected,
-  renaming,
+  isSelected,
+  isRenaming,
   onKeyUp,
 }: Props) {
   const element = document.createElement("li") as HTMLLIElement
   element.classList.add("node")
   element.dataset.id = `${node.id}`
 
-  selected && element.classList.add("selected")
+  isSelected && element.classList.add("selected")
 
   element.addEventListener(
     "dblclick",
@@ -61,7 +61,7 @@ export function NodeComponent({
     false
   )
 
-  const label = renaming
+  const label = isRenaming
     ? InputLabel({
         name: node.name,
         onKeyUp: (e) => {
@@ -70,7 +70,7 @@ export function NodeComponent({
       })
     : TextLabel({ name: node.name })
 
-  if (renaming) {
+  if (isRenaming) {
     // inside of this listener we are sure the element is mounted in the browser
     // dom
     element.addEventListener(
