@@ -1,6 +1,7 @@
 {
   "name": "explorer",
   "version": "0.0.1",
+  "license": "CC0 1.0 Universal",
   "engines": {
     "node": ">=12 <13",
     "yarn": "^1.22.4"
