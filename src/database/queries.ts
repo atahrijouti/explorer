@@ -1,8 +1,6 @@
 import { ID, Node, rootFolder, setSelectedNodeIds, state } from "~app/state"
 import { NodeType } from "~app/types"
 
-// TODO : Move dom related functions out of this file
-
 export function findParents(lookupNode: Node): Node[] {
   if (lookupNode.parentId === null) {
     return [rootFolder]
