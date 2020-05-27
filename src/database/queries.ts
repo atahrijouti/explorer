@@ -1,7 +1,5 @@
 import { ID, Node, rootFolder, setSelectedNodeIds, state } from "~app/state"
-import { AppEvent, NodeType } from "~app/types"
-import { dispatch } from "~app/helpers"
-import { buildNode, explorer, renderSpecificExplorerNodes } from "~explorer"
+import { NodeType } from "~app/types"
 
 // TODO : Move dom related functions out of this file
 
@@ -9,17 +7,16 @@ export function findParents(lookupNode: Node): Node[] {
   if (lookupNode.parentId === null) {
     return [rootFolder]
   }
-  const parent = state.nodes.find((node) => node.id === lookupNode.parentId)!
+
+  const parent = state.nodes.find((node) => node.id === lookupNode.parentId)
+
+  if (parent == null) {
+    return []
+  }
   return [...findParents(parent), parent]
 }
 
-export function createNewNode(name: string, type: NodeType) {
-  /// unselect selected
-  const previousSelection = [...state.selectedNodeIds]
-  // TODO : investigate a better approach for not triggering selection changed event twice
-  state.selectedNodeIds = []
-  renderSpecificExplorerNodes(previousSelection)
-
+export function storeNewNode(name: string, type: NodeType) {
   const suitableName = getSuitableName(name, type, state.currentFolder.id)
   const newlyCreatedNode = {
     id: state.nextId,
@@ -29,14 +26,10 @@ export function createNewNode(name: string, type: NodeType) {
   }
   state.nodes.push(newlyCreatedNode)
   state.isRenaming = true
-  const node = buildNode(newlyCreatedNode)
-  explorer.querySelector("ul")!.appendChild(node)
   state.nextId++
-
   setSelectedNodeIds([newlyCreatedNode.id])
-  // when newNodeDom has been mounted, trigger MOUNTED event on newNodeDom
-  // so that newNodeDom also knows that it was mounted
-  dispatch(node, AppEvent.MOUNTED)
+
+  return newlyCreatedNode
 }
 
 export function deleteSelectedNodes() {

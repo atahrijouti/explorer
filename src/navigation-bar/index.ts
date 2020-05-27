@@ -6,10 +6,10 @@ import {
   setSelectedNodeIds,
   SelectionChange,
 } from "~app/state"
-import { explorer } from "~explorer"
+import { buildNode, explorer, renderSpecificExplorerNodes } from "~explorer"
 import {
   findParents,
-  createNewNode,
+  storeNewNode,
   deleteSelectedNodes,
 } from "~database/queries"
 import { AppEvent, NodeType } from "~app/types"
@@ -66,6 +66,25 @@ export function renderBreadcrumb(currentFolder: Node) {
   Array.from(breadcrumb.querySelectorAll("li")).forEach((node) =>
     node.addEventListener("click", respondToBreadcrumbClick)
   )
+}
+
+function createNewNode(name: string, type: NodeType) {
+  unselectSelectedNodes()
+  const node = storeNewNode(name, type)
+  appendNode(node)
+}
+
+function unselectSelectedNodes() {
+  const previousSelection = [...state.selectedNodeIds]
+  // TODO : investigate a better approach for not triggering selection changed event twice
+  state.selectedNodeIds = []
+  renderSpecificExplorerNodes(previousSelection)
+}
+
+function appendNode(node: Node) {
+  const domNode = buildNode(node)
+  explorer.querySelector("ul")!.appendChild(domNode)
+  dispatch(domNode, AppEvent.MOUNTED)
 }
 
 function handleDeleteNodes() {
