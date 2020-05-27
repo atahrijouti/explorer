@@ -1,5 +1,5 @@
-import { Node } from "../../../app/state"
-import { AppEvent } from "../../../app/types"
+import { Node } from "~app/state"
+import { AppEvent } from "~app/types"
 
 type InputLabelProps = {
   name: string

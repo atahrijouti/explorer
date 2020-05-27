@@ -5,18 +5,18 @@ import {
   setCurrentFolder,
   setSelectedNodeIds,
   SelectionChange,
-} from "../app/state"
-import { explorer } from "../explorer"
+} from "~app/state"
+import { explorer } from "~explorer"
 import {
   findParents,
   createNewNode,
   deleteSelectedNodes,
-} from "../database/queries"
-import { AppEvent, NodeType } from "../app/types"
+} from "~database/queries"
+import { AppEvent, NodeType } from "~app/types"
 
 import "./navigation-bar.css"
-import { appElement } from "../app"
-import { dispatch } from "../app/helpers"
+import { appElement } from "~app"
+import { dispatch } from "~app/helpers"
 
 export const goUp = document.getElementById("go-up")!
 export const breadcrumb = document.getElementById("breadcrumb")!

@@ -1,5 +1,6 @@
-import { Explorer } from "../explorer"
-import { NavigationBar } from "../navigation-bar"
+import { Explorer } from "~explorer"
+import { NavigationBar } from "~navigation-bar"
+
 import { rootFolder, setCurrentFolder } from "./state"
 
 import "./app.css"

@@ -4,13 +4,13 @@ import {
   setCurrentFolder,
   setSelectedNodeIds,
   state,
-} from "../app/state"
-import { AppEvent, NodeType } from "../app/types"
+} from "~app/state"
+import { AppEvent, NodeType } from "~app/types"
 import { NodeComponent } from "./components/node"
 
 import "./explorer.scss"
-import { appElement } from "../app"
-import { dispatch } from "../app/helpers"
+import { appElement } from "~app"
+import { dispatch } from "~app/helpers"
 
 // TODO : figure out how to get rid of `!`
 export const explorer = document.querySelector("#explorer")!

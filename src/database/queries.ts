@@ -1,7 +1,7 @@
-import { ID, Node, rootFolder, setSelectedNodeIds, state } from "../app/state"
-import { buildNode, explorer, renderSpecificExplorerNodes } from "../explorer"
-import { AppEvent, NodeType } from "../app/types"
-import { dispatch } from "../app/helpers"
+import { ID, Node, rootFolder, setSelectedNodeIds, state } from "~app/state"
+import { AppEvent, NodeType } from "~app/types"
+import { dispatch } from "~app/helpers"
+import { buildNode, explorer, renderSpecificExplorerNodes } from "~explorer"
 
 // TODO : Move dom related functions out of this file
 
