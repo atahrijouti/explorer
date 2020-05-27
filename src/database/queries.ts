@@ -1,4 +1,4 @@
-import { ID, Node, rootFolder, setSelectedNodeIds, state } from "~app/state"
+import { ID, Node, rootFolder, state } from "~app/state"
 import { NodeType } from "~app/types"
 
 export function findParents(lookupNode: Node): Node[] {
@@ -23,9 +23,7 @@ export function storeNewNode(name: string, type: NodeType) {
     parentId: state.currentFolder.id,
   }
   state.nodes.push(newlyCreatedNode)
-  state.isRenaming = true
   state.nextId++
-  setSelectedNodeIds([newlyCreatedNode.id])
 
   return newlyCreatedNode
 }

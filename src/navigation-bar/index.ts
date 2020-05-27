@@ -40,7 +40,6 @@ export function NavigationBar() {
   )
   deleteNodeBtn.addEventListener("click", handleDeleteNodes, false)
   renameNodeBtn.addEventListener("click", handleEditNode, false)
-  document.addEventListener("keyup", handleKeyUp, false)
   appElement.addEventListener(AppEvent.FOLDER_CHANGED, handleFolderChanged)
   appElement.addEventListener(
     AppEvent.SELECTION_CHANGED,
@@ -69,19 +68,9 @@ export function renderBreadcrumb(currentFolder: Node) {
 }
 
 function createNewNode(name: string, type: NodeType) {
-  unselectSelectedNodes()
   const node = storeNewNode(name, type)
-  appendNode(node)
-}
-
-function unselectSelectedNodes() {
-  const previousSelection = [...state.selectedNodeIds]
-  // TODO : investigate a better approach for not triggering selection changed event twice
-  state.selectedNodeIds = []
-  renderSpecificExplorerNodes(previousSelection)
-}
-
-function appendNode(node: Node) {
+  state.isRenaming = true
+  setSelectedNodeIds([node.id])
   const domNode = buildNode(node)
   explorer.querySelector("ul")!.appendChild(domNode)
   dispatch(domNode, AppEvent.MOUNTED)
@@ -97,12 +86,8 @@ function handleDeleteNodes() {
 }
 
 function handleEditNode() {
-  // TODO : Make sure not to get into renaming mode when nothing is selected
   state.isRenaming = true
-  dispatch(appElement, AppEvent.SELECTION_CHANGED, [
-    state.selectedNodeIds,
-    state.selectedNodeIds,
-  ])
+  renderSpecificExplorerNodes(state.selectedNodeIds)
 }
 
 function handleFolderChanged(e: Event) {
@@ -150,12 +135,6 @@ export function navigateToParent() {
       return
     }
     setCurrentFolder(clickedNode)
-  }
-}
-
-function handleKeyUp(e: KeyboardEvent) {
-  if (e.key === "F2") {
-    handleEditNode()
   }
 }
 

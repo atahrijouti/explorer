@@ -30,11 +30,15 @@ function handleInputKeyUp(node: Node, e: KeyboardEvent) {
     case "Enter":
       node.name = (e.currentTarget as HTMLInputElement).value
       state.isRenaming = false
-      setSelectedNodeIds(state.selectedNodeIds)
+      renderSpecificExplorerNodes(state.selectedNodeIds)
       break
     case "Escape":
       state.isRenaming = false
-      setSelectedNodeIds(state.selectedNodeIds)
+      renderSpecificExplorerNodes(state.selectedNodeIds)
+      break
+    case "F2":
+      state.isRenaming = true
+      renderSpecificExplorerNodes(state.selectedNodeIds)
       break
     default:
       return true
