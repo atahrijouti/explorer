@@ -91,7 +91,13 @@ function handleEditNode() {
 }
 
 function handleFolderChanged(e: Event) {
-  renderBreadcrumb((e as CustomEvent<Node>).detail)
+  const folder = (e as CustomEvent<Node>).detail;
+  renderBreadcrumb(folder)
+  if (folder.id === null) {
+    goUp.setAttribute("disabled", "disabled")
+  } else {
+    goUp.removeAttribute("disabled")
+  }
 }
 
 function handleSelectionChanged(e: Event) {
@@ -116,7 +122,7 @@ function respondToBreadcrumbClick(e: MouseEvent) {
   const nextId = Number(currentTarget.dataset.id)
   const clickedNode = state.nodes.find((node) => node.id === nextId)
   if (clickedNode == null) {
-    // TODO : add 404
+    console.log('404 NOT FOUND')
     return
   }
   setCurrentFolder(clickedNode)
