@@ -14,12 +14,14 @@ import "./navigation-bar.css"
 import { appElement } from "~app"
 import { dispatch } from "~app/helpers"
 
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 export const goUp = document.getElementById("go-up")!
 export const breadcrumb = document.getElementById("breadcrumb")!
 export const newFolderBtn = document.getElementById("new-folder")!
 export const newFileBtn = document.getElementById("new-file")!
 export const deleteNodeBtn = document.getElementById("delete-nodes")!
 export const renameNodeBtn = document.getElementById("rename-node")!
+/* eslint-enable @typescript-eslint/no-non-null-assertion */
 
 export function NavigationBar() {
   //// Event Listeners
@@ -52,6 +54,7 @@ function createNewNode(name: string, type: NodeType) {
   state.isRenaming = true
   setSelectedNodeIds([node.id])
   const domNode = buildNode(node)
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   explorer.querySelector("ul")!.appendChild(domNode)
   dispatch(domNode, AppEvent.MOUNTED)
 }

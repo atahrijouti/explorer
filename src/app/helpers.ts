@@ -1,4 +1,8 @@
-export const dispatch = (element: HTMLElement, eventName: string, detail: any | null = null) => {
+export const dispatch = (
+  element: HTMLElement,
+  eventName: string,
+  detail: unknown | null = null
+) => {
   if (detail == null) {
     element.dispatchEvent(new Event(eventName))
   } else {

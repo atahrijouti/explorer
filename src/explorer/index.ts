@@ -7,6 +7,7 @@ import { appElement } from "~app"
 import { dispatch } from "~app/helpers"
 
 // TODO : figure out how to get rid of `!`
+// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 export const explorer = document.querySelector("#explorer")!
 
 export function Explorer() {
@@ -91,6 +92,7 @@ export function renderExplorerNodes(currentFolder: Node) {
     }
   })
 
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   explorer.replaceChild(ul, explorer.querySelector("ul")!)
 }
 
@@ -112,6 +114,7 @@ export function renderSpecificExplorerNodes(nodeIds: number[]) {
       return
     }
     const newNodeDom = buildNode(node)
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     explorer.querySelector("ul")!.replaceChild(newNodeDom, currentNodeDom)
     // when newNodeDom has been mounted, trigger MOUNTED event on newNodeDom
     // so that newNodeDom also knows that it was mounted
