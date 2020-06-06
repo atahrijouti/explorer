@@ -1,6 +1,8 @@
+import { AppEvent } from "~app/types"
+
 export const dispatch = (
   element: HTMLElement,
-  eventName: string,
+  eventName: AppEvent,
   detail: unknown | null = null
 ) => {
   if (detail == null) {

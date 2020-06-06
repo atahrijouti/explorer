@@ -6,9 +6,7 @@ import "./explorer.scss"
 import { appElement } from "~app"
 import { dispatch } from "~app/helpers"
 
-// TODO : figure out how to get rid of `!`
-// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-export const explorer = document.querySelector("#explorer")!
+export const explorer = document.querySelector("#explorer") as HTMLElement
 
 export function Explorer() {
   appElement.addEventListener(AppEvent.FOLDER_CHANGED, (e) => {
@@ -18,6 +16,17 @@ export function Explorer() {
     const [current, previous] = (e as CustomEvent<SelectionChange>).detail
     renderSpecificExplorerNodes([...previous, ...current])
   })
+  appElement.addEventListener(AppEvent.RENAME_NODE, () => {
+    startRenaming()
+  })
+  // TODO: clean up when the explorer is unmounted
+  document.addEventListener("keyup", handleKeyUp, false)
+}
+
+function handleKeyUp(e: KeyboardEvent) {
+  if (e.key === "F2") {
+    startRenaming()
+  }
 }
 
 function handleInputKeyUp(node: Node, e: KeyboardEvent) {
@@ -31,13 +40,14 @@ function handleInputKeyUp(node: Node, e: KeyboardEvent) {
       state.isRenaming = false
       renderSpecificExplorerNodes(state.selectedNodeIds)
       break
-    case "F2":
-      state.isRenaming = true
-      renderSpecificExplorerNodes(state.selectedNodeIds)
-      break
     default:
       return true
   }
+}
+
+function startRenaming() {
+  state.isRenaming = true
+  renderSpecificExplorerNodes(state.selectedNodeIds)
 }
 
 function handleNodeDblClick(node: Node, e: MouseEvent) {

@@ -1,27 +1,18 @@
-import {
-  state,
-  rootFolder,
-  Node,
-  setCurrentFolder,
-  setSelectedNodeIds,
-  SelectionChange,
-} from "~app/state"
-import { buildNode, explorer, renderSpecificExplorerNodes } from "~explorer"
-import { findParents, storeNewNode, deleteSelectedNodes } from "~database/queries"
+import { Node, rootFolder, SelectionChange, setCurrentFolder, setSelectedNodeIds, state } from "~app/state"
+import { buildNode, explorer } from "~explorer"
+import { deleteSelectedNodes, findParents, storeNewNode } from "~database/queries"
 import { AppEvent, NodeType } from "~app/types"
 
 import "./navigation-bar.css"
 import { appElement } from "~app"
 import { dispatch } from "~app/helpers"
 
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
-export const goUp = document.getElementById("go-up")!
-export const breadcrumb = document.getElementById("breadcrumb")!
-export const newFolderBtn = document.getElementById("new-folder")!
-export const newFileBtn = document.getElementById("new-file")!
-export const deleteNodeBtn = document.getElementById("delete-nodes")!
-export const renameNodeBtn = document.getElementById("rename-node")!
-/* eslint-enable @typescript-eslint/no-non-null-assertion */
+export const goUp = document.getElementById("go-up") as HTMLButtonElement
+export const breadcrumb = document.getElementById("breadcrumb") as HTMLButtonElement
+export const newFolderBtn = document.getElementById("new-folder") as HTMLButtonElement
+export const newFileBtn = document.getElementById("new-file") as HTMLButtonElement
+export const deleteNodeBtn = document.getElementById("delete-nodes") as HTMLButtonElement
+export const renameNodeBtn = document.getElementById("rename-node") as HTMLButtonElement
 
 export function NavigationBar() {
   //// Event Listeners
@@ -69,8 +60,7 @@ function handleDeleteNodes() {
 }
 
 function handleEditNode() {
-  state.isRenaming = true
-  renderSpecificExplorerNodes(state.selectedNodeIds)
+  dispatch(appElement, AppEvent.RENAME_NODE)
 }
 
 function handleFolderChanged(e: Event) {
