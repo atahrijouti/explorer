@@ -12,6 +12,10 @@
     user-select: none;
     border: 1px solid transparent;
 
+    .icon {
+      width: 100%;
+    }
+
     &:hover {
       background: hsl(205, 51%, 92%);
     }

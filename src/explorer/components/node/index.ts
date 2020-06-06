@@ -1,5 +1,6 @@
 import { Node } from "~app/state"
 import { AppEvent } from "~app/types"
+import { nodeIcon } from "~explorer/helpers/node-icon"
 
 type InputLabelProps = {
   name: string
@@ -41,11 +42,6 @@ export function NodeComponent({
   onKeyUp,
 }: Props) {
   const element = document.createElement("li") as HTMLLIElement
-  element.classList.add("node")
-  element.dataset.id = `${node.id}`
-
-  isSelected && element.classList.add("selected")
-
   element.addEventListener(
     "dblclick",
     (e) => {
@@ -60,6 +56,11 @@ export function NodeComponent({
     },
     false
   )
+
+  const img = document.createElement("img")
+  img.setAttribute("alt", node.type)
+  img.classList.add("icon")
+  img.setAttribute("src", nodeIcon(node.type))
 
   const label = isRenaming
     ? InputLabel({
@@ -81,6 +82,12 @@ export function NodeComponent({
       false
     )
   }
+
+
+  element.classList.add("node")
+  element.dataset.id = `${node.id}`
+  isSelected && element.classList.add("selected")
+  element.appendChild(img)
   element.appendChild(label)
   return element
 }
