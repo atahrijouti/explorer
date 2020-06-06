@@ -1,10 +1,4 @@
-import {
-  Node,
-  SelectionChange,
-  setCurrentFolder,
-  setSelectedNodeIds,
-  state,
-} from "~app/state"
+import { Node, SelectionChange, setCurrentFolder, setSelectedNodeIds, state } from "~app/state"
 import { AppEvent, NodeType } from "~app/types"
 import { NodeComponent } from "./components/node"
 
@@ -63,10 +57,7 @@ function handleNodeDblClick(node: Node, e: MouseEvent) {
 }
 
 function handleNodeClick(node: Node, e: MouseEvent) {
-  if (
-    (e.target as HTMLElement).classList.contains("rename") ||
-    node.id == null
-  ) {
+  if ((e.target as HTMLElement).classList.contains("rename") || node.id == null) {
     return
   }
   if (state.selectedNodeIds.find((id) => id === node.id)) {
@@ -114,18 +105,16 @@ export function renderSpecificExplorerNodes(nodeIds: number[]) {
   // generate selector to select all existing dom nodes based on nodeIds
   const selector = nodeIds.map((id) => `[data-id="${id}"]`).join(",")
 
-  explorer
-    .querySelectorAll<HTMLLIElement>(selector)
-    .forEach((currentNodeDom) => {
-      const id = Number(currentNodeDom.dataset.id)
-      const node = state.nodes.find((n) => n.id === id)
-      if (node == null) {
-        return
-      }
-      const newNodeDom = buildNode(node)
-      explorer.querySelector("ul")!.replaceChild(newNodeDom, currentNodeDom)
-      // when newNodeDom has been mounted, trigger MOUNTED event on newNodeDom
-      // so that newNodeDom also knows that it was mounted
-      dispatch(newNodeDom, AppEvent.MOUNTED)
-    })
+  explorer.querySelectorAll<HTMLLIElement>(selector).forEach((currentNodeDom) => {
+    const id = Number(currentNodeDom.dataset.id)
+    const node = state.nodes.find((n) => n.id === id)
+    if (node == null) {
+      return
+    }
+    const newNodeDom = buildNode(node)
+    explorer.querySelector("ul")!.replaceChild(newNodeDom, currentNodeDom)
+    // when newNodeDom has been mounted, trigger MOUNTED event on newNodeDom
+    // so that newNodeDom also knows that it was mounted
+    dispatch(newNodeDom, AppEvent.MOUNTED)
+  })
 }

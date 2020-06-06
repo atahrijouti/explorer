@@ -7,11 +7,7 @@ import {
   SelectionChange,
 } from "~app/state"
 import { buildNode, explorer, renderSpecificExplorerNodes } from "~explorer"
-import {
-  findParents,
-  storeNewNode,
-  deleteSelectedNodes,
-} from "~database/queries"
+import { findParents, storeNewNode, deleteSelectedNodes } from "~database/queries"
 import { AppEvent, NodeType } from "~app/types"
 
 import "./navigation-bar.css"
@@ -28,23 +24,12 @@ export const renameNodeBtn = document.getElementById("rename-node")!
 export function NavigationBar() {
   //// Event Listeners
   goUp.addEventListener("click", navigateToParent, false)
-  newFolderBtn.addEventListener(
-    "click",
-    () => createNewNode("New folder", NodeType.FOLDER),
-    false
-  )
-  newFileBtn.addEventListener(
-    "click",
-    () => createNewNode("New file", NodeType.FILE),
-    false
-  )
+  newFolderBtn.addEventListener("click", () => createNewNode("New folder", NodeType.FOLDER), false)
+  newFileBtn.addEventListener("click", () => createNewNode("New file", NodeType.FILE), false)
   deleteNodeBtn.addEventListener("click", handleDeleteNodes, false)
   renameNodeBtn.addEventListener("click", handleEditNode, false)
   appElement.addEventListener(AppEvent.FOLDER_CHANGED, handleFolderChanged)
-  appElement.addEventListener(
-    AppEvent.SELECTION_CHANGED,
-    handleSelectionChanged
-  )
+  appElement.addEventListener(AppEvent.SELECTION_CHANGED, handleSelectionChanged)
 }
 
 export function renderBreadcrumb(currentFolder: Node) {
@@ -53,14 +38,9 @@ export function renderBreadcrumb(currentFolder: Node) {
     breadcrumbItems.push(state.currentFolder)
   }
 
-  breadcrumb.innerHTML = breadcrumbItems.reduce<string>(
-    (accumulator, node: Node) => {
-      return (
-        accumulator + `<li data-id="${node.id}"><span>${node.name}</span></li>`
-      )
-    },
-    ""
-  )
+  breadcrumb.innerHTML = breadcrumbItems.reduce<string>((accumulator, node: Node) => {
+    return accumulator + `<li data-id="${node.id}"><span>${node.name}</span></li>`
+  }, "")
 
   Array.from(breadcrumb.querySelectorAll("li")).forEach((node) =>
     node.addEventListener("click", respondToBreadcrumbClick)
@@ -91,7 +71,7 @@ function handleEditNode() {
 }
 
 function handleFolderChanged(e: Event) {
-  const folder = (e as CustomEvent<Node>).detail;
+  const folder = (e as CustomEvent<Node>).detail
   renderBreadcrumb(folder)
   if (folder.id === null) {
     goUp.setAttribute("disabled", "disabled")
@@ -122,7 +102,7 @@ function respondToBreadcrumbClick(e: MouseEvent) {
   const nextId = Number(currentTarget.dataset.id)
   const clickedNode = state.nodes.find((node) => node.id === nextId)
   if (clickedNode == null) {
-    console.log('404 NOT FOUND')
+    console.log("404 NOT FOUND")
     return
   }
   setCurrentFolder(clickedNode)
@@ -134,9 +114,7 @@ export function navigateToParent() {
       goToRoot()
     }
   } else {
-    const clickedNode = state.nodes.find(
-      (node) => node.id === state.currentFolder.parentId
-    )
+    const clickedNode = state.nodes.find((node) => node.id === state.currentFolder.parentId)
     if (clickedNode == null) {
       return
     }

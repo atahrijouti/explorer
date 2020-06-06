@@ -64,11 +64,7 @@ function getSuitableName(newName: string, nodeType: NodeType, parentId: ID) {
     const matches = node.name.match(regex)
 
     // if we find a matching name in the current folder & same type
-    if (
-      node.parentId === parentId &&
-      matches !== null &&
-      node.type === nodeType
-    ) {
+    if (node.parentId === parentId && matches !== null && node.type === nodeType) {
       // if we still haven't found a max then use  "${newName} (2)"
       if (node.name === newName && max === null) {
         return 2

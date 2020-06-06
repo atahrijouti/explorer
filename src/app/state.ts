@@ -54,6 +54,6 @@ export const setSelectedNodeIds = (ids: number[]) => {
   state.selectedNodeIds = ids
   dispatch(appElement, AppEvent.SELECTION_CHANGED, <SelectionChange>[
     state.selectedNodeIds,
-    previous
+    previous,
   ])
 }
