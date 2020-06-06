@@ -5,7 +5,7 @@ import { NodeComponent } from "./components/node"
 import "./explorer.scss"
 import { appElement } from "~app"
 import { dispatch } from "~app/helpers"
-import { deleteSelectedNodes } from "~database/queries"
+import { deleteSelectedNodes, storeNewNode } from "~database/queries"
 
 export const explorer = document.querySelector("#explorer") as HTMLElement
 
@@ -19,6 +19,7 @@ export function Explorer() {
   })
   appElement.addEventListener(AppEvent.RENAME_NODE, startRenaming)
   appElement.addEventListener(AppEvent.REMOVE_NODES, removeNodes)
+  appElement.addEventListener(AppEvent.CREATE_NODE, createNewNode)
 
   // TODO: clean up when the explorer is unmounted
   document.addEventListener("keyup", handleKeyUp, false)
@@ -28,6 +29,18 @@ function handleKeyUp(e: KeyboardEvent) {
   if (e.key === "F2") {
     startRenaming()
   }
+}
+
+function createNewNode(e: Event) {
+  const type = (e as CustomEvent<NodeType>).detail
+  const name = type === NodeType.FILE ? 'New File' : 'New Folder'
+  const node = storeNewNode(name, type)
+  state.isRenaming = true
+  setSelectedNodeIds([node.id])
+  const domNode = buildNode(node)
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  explorer.querySelector("ul")!.appendChild(domNode)
+  dispatch(domNode, AppEvent.MOUNTED)
 }
 
 function removeNodes() {

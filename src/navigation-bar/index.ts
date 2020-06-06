@@ -1,6 +1,5 @@
-import { Node, rootFolder, SelectionChange, setCurrentFolder, setSelectedNodeIds, state } from "~app/state"
-import { buildNode, explorer } from "~explorer"
-import { findParents, storeNewNode } from "~database/queries"
+import { Node, rootFolder, SelectionChange, setCurrentFolder, state } from "~app/state"
+import { findParents } from "~database/queries"
 import { AppEvent, NodeType } from "~app/types"
 
 import "./navigation-bar.css"
@@ -17,8 +16,12 @@ export const renameNodeBtn = document.getElementById("rename-node") as HTMLButto
 export function NavigationBar() {
   //// Event Listeners
   goUp.addEventListener("click", navigateToParent, false)
-  newFolderBtn.addEventListener("click", () => createNewNode("New folder", NodeType.FOLDER), false)
-  newFileBtn.addEventListener("click", () => createNewNode("New file", NodeType.FILE), false)
+  newFolderBtn.addEventListener("click", () =>
+    dispatch(appElement, AppEvent.CREATE_NODE, NodeType.FOLDER)
+  )
+  newFileBtn.addEventListener("click", () =>
+    dispatch(appElement, AppEvent.CREATE_NODE, NodeType.FILE)
+  )
   deleteNodeBtn.addEventListener("click", handleDeleteNodes, false)
   renameNodeBtn.addEventListener("click", handleEditNode, false)
   appElement.addEventListener(AppEvent.FOLDER_CHANGED, handleFolderChanged)
@@ -38,16 +41,6 @@ export function renderBreadcrumb(currentFolder: Node) {
   Array.from(breadcrumb.querySelectorAll("li")).forEach((node) =>
     node.addEventListener("click", respondToBreadcrumbClick)
   )
-}
-
-function createNewNode(name: string, type: NodeType) {
-  const node = storeNewNode(name, type)
-  state.isRenaming = true
-  setSelectedNodeIds([node.id])
-  const domNode = buildNode(node)
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  explorer.querySelector("ul")!.appendChild(domNode)
-  dispatch(domNode, AppEvent.MOUNTED)
 }
 
 function handleDeleteNodes() {

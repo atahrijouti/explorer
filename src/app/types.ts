@@ -9,4 +9,5 @@ export enum AppEvent {
   FOLDER_CHANGED = "e-folder-changed",
   RENAME_NODE = "e-rename-node",
   REMOVE_NODES = "e-remove-nodes",
+  CREATE_NODE = "e-create-node",
 }
