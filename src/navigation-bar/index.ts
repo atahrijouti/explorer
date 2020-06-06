@@ -1,6 +1,6 @@
 import { Node, rootFolder, SelectionChange, setCurrentFolder, setSelectedNodeIds, state } from "~app/state"
 import { buildNode, explorer } from "~explorer"
-import { deleteSelectedNodes, findParents, storeNewNode } from "~database/queries"
+import { findParents, storeNewNode } from "~database/queries"
 import { AppEvent, NodeType } from "~app/types"
 
 import "./navigation-bar.css"
@@ -51,12 +51,7 @@ function createNewNode(name: string, type: NodeType) {
 }
 
 function handleDeleteNodes() {
-  state.selectedNodeIds.forEach((id) => {
-    explorer.querySelector(`[data-id="${id}"]`)?.remove()
-  })
-  deleteNodeBtn.setAttribute("disabled", "disabled")
-  setSelectedNodeIds([])
-  deleteSelectedNodes()
+  dispatch(appElement, AppEvent.REMOVE_NODES)
 }
 
 function handleEditNode() {

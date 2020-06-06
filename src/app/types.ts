@@ -8,4 +8,5 @@ export enum AppEvent {
   SELECTION_CHANGED = "e-selection-changed",
   FOLDER_CHANGED = "e-folder-changed",
   RENAME_NODE = "e-rename-node",
+  REMOVE_NODES = "e-remove-nodes",
 }

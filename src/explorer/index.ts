@@ -5,6 +5,7 @@ import { NodeComponent } from "./components/node"
 import "./explorer.scss"
 import { appElement } from "~app"
 import { dispatch } from "~app/helpers"
+import { deleteSelectedNodes } from "~database/queries"
 
 export const explorer = document.querySelector("#explorer") as HTMLElement
 
@@ -16,9 +17,9 @@ export function Explorer() {
     const [current, previous] = (e as CustomEvent<SelectionChange>).detail
     renderSpecificExplorerNodes([...previous, ...current])
   })
-  appElement.addEventListener(AppEvent.RENAME_NODE, () => {
-    startRenaming()
-  })
+  appElement.addEventListener(AppEvent.RENAME_NODE, startRenaming)
+  appElement.addEventListener(AppEvent.REMOVE_NODES, removeNodes)
+
   // TODO: clean up when the explorer is unmounted
   document.addEventListener("keyup", handleKeyUp, false)
 }
@@ -27,6 +28,14 @@ function handleKeyUp(e: KeyboardEvent) {
   if (e.key === "F2") {
     startRenaming()
   }
+}
+
+function removeNodes() {
+  state.selectedNodeIds.forEach((id) => {
+    explorer.querySelector(`[data-id="${id}"]`)?.remove()
+  })
+  deleteSelectedNodes()
+  setSelectedNodeIds([])
 }
 
 function handleInputKeyUp(node: Node, e: KeyboardEvent) {
