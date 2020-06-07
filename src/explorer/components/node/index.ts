@@ -43,7 +43,7 @@ export function NodeComponent({
         },
       })
     : TextLabel({ name: node.name })
-  console.log(`node ${isSelected ? "selected" : ""}`)
+
   const element = h<HTMLLIElement>(
     "li",
     {
