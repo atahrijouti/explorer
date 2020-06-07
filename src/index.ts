@@ -1,3 +1,3 @@
 import { App } from "~app"
 
-App()
+App(document.getElementById("root") as HTMLElement)

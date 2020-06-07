@@ -1,6 +1,6 @@
 import { AppEvent, NodeType } from "./types"
 import { dispatch } from "./helpers"
-import { appElement } from "./index"
+import { appElement } from "~app/index"
 
 export type ID = number | null
 export type Node = {
@@ -44,7 +44,7 @@ export const state: State = {
 
 export const setCurrentFolder = (folder: Node) => {
   state.currentFolder = folder
-  dispatch(appElement, AppEvent.FOLDER_CHANGED, folder)
+  appElement && dispatch(appElement, AppEvent.FOLDER_CHANGED, folder)
   setSelectedNodeIds([])
 }
 
@@ -52,7 +52,7 @@ export type SelectionChange = Array<number[]>
 export const setSelectedNodeIds = (ids: number[]) => {
   const previous = [...state.selectedNodeIds]
   state.selectedNodeIds = ids
-  dispatch(appElement, AppEvent.SELECTION_CHANGED, <SelectionChange>[
+  appElement && dispatch(appElement, AppEvent.SELECTION_CHANGED, <SelectionChange>[
     state.selectedNodeIds,
     previous,
   ])
