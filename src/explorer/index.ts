@@ -81,7 +81,7 @@ function handleNodeDblClick(node: Node, e: MouseEvent) {
   if (clickedNode == null) {
     return
   }
-  if (clickedNode.type === NodeType.FOLDER) {
+  if (clickedNode.type !== NodeType.FILE) {
     setCurrentFolder(clickedNode)
   } else {
     console.log(`${clickedNode.name} is a file : OPEN`)

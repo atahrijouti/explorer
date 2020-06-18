@@ -60,7 +60,7 @@ export function NodeComponent({
   const img = document.createElement("img")
   img.setAttribute("alt", node.type)
   img.classList.add("icon")
-  img.setAttribute("src", nodeIcon(node.type))
+  img.setAttribute("src", nodeIcon(node.type, node.name))
 
   const label = isRenaming
     ? InputLabel({

@@ -1,6 +1,8 @@
 export enum NodeType {
   FOLDER = "FOLDER",
   FILE = "FILE",
+  FULL_FOLDER = "FULL_FOLDER",
+  TEXT_FILE = "TEXT_FILE"
 }
 
 export enum AppEvent {

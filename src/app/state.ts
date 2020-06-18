@@ -25,17 +25,19 @@ type State = {
   isRenaming: boolean
 }
 export const state: State = {
-  nextId: 9,
+  nextId: 11,
   breadcrumb: [{ name: rootFolder.name, id: null }],
   nodes: [
     { id: 1, name: "Videos", type: NodeType.FOLDER, parentId: null },
     { id: 2, name: "Pictures", type: NodeType.FOLDER, parentId: null },
-    { id: 3, name: "Documents", type: NodeType.FOLDER, parentId: null },
+    { id: 3, name: "Documents", type: NodeType.FULL_FOLDER, parentId: null },
     { id: 4, name: "Music", type: NodeType.FOLDER, parentId: null },
     { id: 7, name: "New folder", type: NodeType.FOLDER, parentId: null },
     { id: 8, name: "New folder (2)", type: NodeType.FOLDER, parentId: null },
-    { id: 5, name: "CV", type: NodeType.FOLDER, parentId: 3 },
-    { id: 6, name: "Amine Tirecht.pdf", type: NodeType.FILE, parentId: 5 },
+    { id: 5, name: "CV", type: NodeType.FULL_FOLDER, parentId: 3 },
+    { id: 6, name: "Amine.txt", type: NodeType.FILE, parentId: 5 },
+    { id: 9, name: "ATJ.xlsx", type: NodeType.FILE, parentId: 5 },
+    { id: 10, name: "Eminem.mp3", type: NodeType.FILE, parentId: 4 },
   ],
   currentFolder: rootFolder,
   selectedNodeIds: [] as number[],
