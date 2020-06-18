@@ -13,16 +13,12 @@
 
   .node {
     user-select: none;
-    outline: 1px solid transparent;
     list-style-type: none;
     text-align: center;
 
-    .icon-container {
-      width: 100px;
-      height: 100px;
-    }
     .icon {
-      width: 100%;
+      max-width: 100px;
+      max-height: 100px;
     }
 
     .label {

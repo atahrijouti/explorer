@@ -52,10 +52,7 @@ export function NodeComponent({
       ["onclick"]: (e: MouseEvent) => onClick(node, e),
       "data-id": node.id,
     },
-    h(
-      "div",
-      h("img.icon", { alt: node.type, src: nodeIcon(node.type), className: "icon-container" })
-    ),
+    h("img", { className: "icon", alt: node.type, src: nodeIcon(node.type) }),
     label
   )
 
