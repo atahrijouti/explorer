@@ -111,10 +111,6 @@ export function Explorer(appElement: HTMLElement) {
     ul = newUl
   }
 
-  /**
-   * Re-Render nodes identified by a set of nodeIds
-   * @param {number[]} nodeIds
-   */
   function renderSpecificExplorerNodes(nodeIds: number[]) {
     if (nodeIds.length === 0) {
       return
@@ -137,9 +133,6 @@ export function Explorer(appElement: HTMLElement) {
     })
   }
 
-  let ul = h("ul")
-  const explorer = h("main.explorer", ul)
-
   appElement.addEventListener(AppEvent.FOLDER_CHANGED, (e) => {
     renderExplorerNodes((e as CustomEvent<Node>).detail)
   })
@@ -153,6 +146,9 @@ export function Explorer(appElement: HTMLElement) {
 
   // TODO: clean up when the explorer is unmounted
   document.addEventListener("keyup", handleKeyUp, false)
+
+  let ul = h("ul")
+  const explorer = h("main.explorer", ul)
 
   return explorer
 }
