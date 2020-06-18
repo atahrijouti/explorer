@@ -1,19 +1,33 @@
 .explorer {
   padding: 10px;
   flex: 1;
+  overflow: scroll;
 }
 
 .explorer {
-  .node {
-    display: inline-block;
-    width: 100px;
-    height: 100px;
-    margin: 5px;
-    user-select: none;
-    border: 1px solid transparent;
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 100px);
+    grid-gap: 1em 1em;
+  }
 
+  .node {
+    user-select: none;
+    outline: 1px solid transparent;
+    list-style-type: none;
+    text-align: center;
+
+    .icon-container {
+      width: 100px;
+      height: 100px;
+    }
     .icon {
       width: 100%;
+    }
+
+    .label {
+      display: inline-block;
+      text-align: center;
     }
 
     &:hover {
@@ -22,7 +36,7 @@
 
     &.selected {
       background: hsla(205, 51%, 82%, 1);
-      border: 1px solid hsla(205, 51%, 62%, 1);
+      outline: 1px solid hsla(205, 51%, 62%, 1);
     }
 
     .rename {
