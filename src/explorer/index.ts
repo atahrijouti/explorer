@@ -99,7 +99,7 @@ export function Explorer(appElement: HTMLElement) {
   }
 
   function renderExplorerNodes(currentFolder: Node) {
-    const newUl = h("ul")
+    const newUl = buildUl()
 
     state.nodes.forEach((node) => {
       if (node.parentId === currentFolder.id) {
@@ -109,6 +109,10 @@ export function Explorer(appElement: HTMLElement) {
 
     explorer.replaceChild(newUl, ul)
     ul = newUl
+  }
+
+  function buildUl() {
+    return h("ul", { className: "grid" })
   }
 
   function renderSpecificExplorerNodes(nodeIds: number[]) {
@@ -147,7 +151,7 @@ export function Explorer(appElement: HTMLElement) {
   // TODO: clean up when the explorer is unmounted
   document.addEventListener("keyup", handleKeyUp, false)
 
-  let ul = h("ul")
+  let ul = buildUl()
   const explorer = h("main.explorer", ul)
 
   return explorer
