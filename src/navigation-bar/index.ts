@@ -93,19 +93,6 @@ export function NavigationBar(appElement: HTMLElement) {
   const renameNodeBtn = h("button", { disabled: true }, "Rename")
   const deleteNodeBtn = h("button", { disabled: true }, "Delete")
 
-  const element = h(
-    "header",
-    h("nav", { className: "navigation-bar" }, h("div", { className: "buttons" }, goUp), breadcrumb),
-    h(
-      "section",
-      { className: "controls-bar" },
-      newFolderBtn,
-      newFileBtn,
-      renameNodeBtn,
-      deleteNodeBtn
-    )
-  )
-
   //// Event Listeners
   goUp.addEventListener("click", navigateToParent, false)
   newFolderBtn.addEventListener("click", () =>
@@ -119,7 +106,16 @@ export function NavigationBar(appElement: HTMLElement) {
   appElement.addEventListener(AppEvent.FOLDER_CHANGED, handleFolderChanged)
   appElement.addEventListener(AppEvent.SELECTION_CHANGED, handleSelectionChanged)
 
-  ////
-
-  return element
+  return h(
+    "header",
+    h("nav", { className: "navigation-bar" }, h("div", { className: "buttons" }, goUp), breadcrumb),
+    h(
+      "section",
+      { className: "controls-bar" },
+      newFolderBtn,
+      newFileBtn,
+      renameNodeBtn,
+      deleteNodeBtn
+    )
+  )
 }

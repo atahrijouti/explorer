@@ -9,14 +9,19 @@ type InputLabelProps = {
   onKeyUp: (e: KeyboardEvent) => void
 }
 function InputLabel({ name, onKeyUp }: InputLabelProps) {
-  return h<HTMLInputElement>("input.rename", { type: "text", value: name, onkeyup: onKeyUp })
+  return h("input", {
+    type: "text",
+    className: "rename",
+    value: name,
+    onkeyup: onKeyUp,
+  })
 }
 
 type TextLabelProps = {
   name: string
 }
 function TextLabel({ name }: TextLabelProps) {
-  return h<HTMLSpanElement>("span.label", name)
+  return h("span", { className: "label" }, name)
 }
 
 type Props = {
@@ -44,29 +49,21 @@ export function NodeComponent({
       })
     : TextLabel({ name: node.name })
 
-  const element = h<HTMLLIElement>(
+  return h(
     "li",
     {
       className: `node ${isSelected ? "selected" : ""}`,
       ["ondblclick"]: (e: MouseEvent) => onDblClick(node, e),
       ["onclick"]: (e: MouseEvent) => onClick(node, e),
+      ...(isRenaming && {
+        // HyperScript is really bad, since it requires an on prefix for event listeners
+        [`on${AppEvent.MOUNTED}`]: () => {
+          label.focus()
+        },
+      }),
       "data-id": node.id,
     },
     h("img", { className: "icon", alt: node.type, src: nodeIcon(node.type) }),
     label
   )
-
-  if (isRenaming) {
-    // inside of this listener we are sure the element is mounted in the browser
-    // dom
-    element.addEventListener(
-      AppEvent.MOUNTED,
-      () => {
-        label.focus()
-      },
-      false
-    )
-  }
-
-  return element
 }

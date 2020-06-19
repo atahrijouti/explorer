@@ -152,7 +152,7 @@ export function Explorer(appElement: HTMLElement) {
   document.addEventListener("keyup", handleKeyUp, false)
 
   let ul = buildUl()
-  const explorer = h("main.explorer", ul)
+  const explorer = h("main", {className: "explorer"}, ul)
 
   return explorer
 }
