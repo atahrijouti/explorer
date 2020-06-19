@@ -5,7 +5,7 @@ import fullFolderImage from "~images/full_folder.png"
 import textFileImage from "~images/text_file.png"
 import audioFileImage from "~images/audio_file.png"
 import unknownImage from "~images/unknown.png"
-import { Node } from "~app/state"
+import { Node, state } from "~app/state"
 
 export function nodeIcon(node: Node): string {
   switch (node.type) {
@@ -16,7 +16,8 @@ export function nodeIcon(node: Node): string {
 }
 
 function getFolderImage(node: Node) {
-  return folderImage
+  const childCount = state.nodes.filter(child => child.parentId === node.id).length
+  return childCount > 0 ? fullFolderImage : folderImage
 }
 
 function getFileImage(node: Node) {
