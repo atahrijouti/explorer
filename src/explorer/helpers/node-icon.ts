@@ -20,5 +20,10 @@ function getFolderImage(node: Node) {
 }
 
 function getFileImage(node: Node) {
-  return fileImage
+  const extension  = node.name.split('.').pop()
+  switch (extension) {
+    case 'txt': return textFileImage
+    case 'mp3': return audioFileImage
+    default: return fileImage
+  }
 }
