@@ -63,7 +63,7 @@ export function NodeComponent({
       }),
       "data-id": node.id,
     },
-    h("img", { className: "icon", alt: node.type, src: nodeIcon(node.type) }),
+    h("img", { className: "icon", alt: node.type, src: nodeIcon(node) }),
     label
   )
 }
