@@ -7,8 +7,9 @@ import { deleteSelectedNodes, storeNewNode } from "~database/queries"
 
 import { NodeComponent } from "./components/node"
 import "./explorer.scss"
+import { appEmitter } from "~app"
 
-export function Explorer(appElement: HTMLElement) {
+export function Explorer() {
   function handleKeyUp(e: KeyboardEvent) {
     if (e.key === "F2") {
       startRenaming()
@@ -137,16 +138,16 @@ export function Explorer(appElement: HTMLElement) {
     })
   }
 
-  appElement.addEventListener(AppEvent.FOLDER_CHANGED, (e) => {
+  appEmitter.addEventListener(AppEvent.FOLDER_CHANGED, (e) => {
     renderExplorerNodes((e as CustomEvent<Node>).detail)
   })
-  appElement.addEventListener(AppEvent.SELECTION_CHANGED, (e) => {
+  appEmitter.addEventListener(AppEvent.SELECTION_CHANGED, (e) => {
     const [current, previous] = (e as CustomEvent<SelectionChange>).detail
     renderSpecificExplorerNodes([...previous, ...current])
   })
-  appElement.addEventListener(AppEvent.RENAME_NODE, startRenaming)
-  appElement.addEventListener(AppEvent.REMOVE_NODES, removeNodes)
-  appElement.addEventListener(AppEvent.CREATE_NODE, createNewNode)
+  appEmitter.addEventListener(AppEvent.RENAME_NODE, startRenaming)
+  appEmitter.addEventListener(AppEvent.REMOVE_NODES, removeNodes)
+  appEmitter.addEventListener(AppEvent.CREATE_NODE, createNewNode)
 
   // TODO: clean up when the explorer is unmounted
   document.addEventListener("keyup", handleKeyUp, false)

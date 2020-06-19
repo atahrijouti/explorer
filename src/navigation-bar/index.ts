@@ -5,8 +5,9 @@ import { AppEvent, NodeType } from "~app/types"
 import "./navigation-bar.css"
 import { dispatch } from "~app/helpers"
 import h from "hyperscript"
+import { appEmitter } from "~app"
 
-export function NavigationBar(appElement: HTMLElement) {
+export function NavigationBar() {
   function renderBreadcrumb(currentFolder: Node) {
     const breadcrumbItems = findParents(currentFolder)
     if (state.currentFolder !== rootFolder) {
@@ -23,11 +24,11 @@ export function NavigationBar(appElement: HTMLElement) {
   }
 
   function handleDeleteNodes() {
-    dispatch(appElement, AppEvent.REMOVE_NODES)
+    dispatch(appEmitter, AppEvent.REMOVE_NODES)
   }
 
   function handleEditNode() {
-    dispatch(appElement, AppEvent.RENAME_NODE)
+    dispatch(appEmitter, AppEvent.RENAME_NODE)
   }
 
   function handleFolderChanged(e: Event) {
@@ -96,15 +97,15 @@ export function NavigationBar(appElement: HTMLElement) {
   //// Event Listeners
   goUp.addEventListener("click", navigateToParent, false)
   newFolderBtn.addEventListener("click", () =>
-    dispatch(appElement, AppEvent.CREATE_NODE, NodeType.FOLDER)
+    dispatch(appEmitter, AppEvent.CREATE_NODE, NodeType.FOLDER)
   )
   newFileBtn.addEventListener("click", () =>
-    dispatch(appElement, AppEvent.CREATE_NODE, NodeType.FILE)
+    dispatch(appEmitter, AppEvent.CREATE_NODE, NodeType.FILE)
   )
   deleteNodeBtn.addEventListener("click", handleDeleteNodes, false)
   renameNodeBtn.addEventListener("click", handleEditNode, false)
-  appElement.addEventListener(AppEvent.FOLDER_CHANGED, handleFolderChanged)
-  appElement.addEventListener(AppEvent.SELECTION_CHANGED, handleSelectionChanged)
+  appEmitter.addEventListener(AppEvent.FOLDER_CHANGED, handleFolderChanged)
+  appEmitter.addEventListener(AppEvent.SELECTION_CHANGED, handleSelectionChanged)
 
   return h(
     "header",

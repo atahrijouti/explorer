@@ -1,19 +1,24 @@
 import h from "hyperscript"
+
 import { Explorer } from "~explorer"
 import { NavigationBar } from "~navigation-bar"
 
 import { rootFolder, setCurrentFolder } from "./state"
 import "./app.css"
+import { AppEvent } from "~app/types"
 
-export let appElement: HTMLElement | null = null
+export const appEmitter = new EventTarget()
 
-export function App(rootElement: HTMLElement) {
-  appElement = h<HTMLDivElement>("div.app")
-  rootElement.appendChild(appElement)
-  appElement.appendChild(NavigationBar(appElement))
-  appElement.appendChild(Explorer(appElement))
-
-  //////////
-  // this also takes care of updating the explorer nodes that are rendered
-  setCurrentFolder(rootFolder)
+export function App() {
+  return h(
+    "div",
+    {
+      className: "app",
+      [`on${AppEvent.MOUNTED}`]: () => {
+        setCurrentFolder(rootFolder)
+      },
+    },
+    NavigationBar(),
+    Explorer()
+  )
 }
