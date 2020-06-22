@@ -10,21 +10,32 @@
   flex: none;
 }
 
+.navigation-bar .buttons>button {
+  padding: 6px;
+  border: 0;
+}
+
 .breadcrumb li {
   display: inline-block;
   padding-left: 10px;
   position: relative;
+  margin: 0 3px;
 }
 
 .breadcrumb li span:hover {
-  text-decoration: underline;
+  color: #81b0c0;
   cursor: pointer;
 }
 
 .breadcrumb li:not(:first-child):before {
-  content: "/";
+  content: "▸";
   position: absolute;
-  margin-left: -10px;
+  margin-left: -13px;
+  color: #969696;
+}
+
+.breadcrumb li:first-child {
+  padding-left: 0;
 }
 
 .controls-bar {

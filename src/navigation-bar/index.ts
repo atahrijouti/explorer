@@ -87,7 +87,7 @@ export function NavigationBar() {
     setCurrentFolder(rootFolder)
   }
 
-  const goUp = h("button", "⬆️")
+  const goUp = h("button", "🡱")
   const breadcrumb = h("ul", { className: "breadcrumb" })
   const newFolderBtn = h("button", "New Folder")
   const newFileBtn = h("button", "New File")
