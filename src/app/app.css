@@ -23,3 +23,8 @@ html, body, #root, .app  {
   display: flex;
   flex-direction: column;
 }
+
+body  {
+  font-family: "Tahoma", sans-serif;
+  font-size: 14px;
+}
