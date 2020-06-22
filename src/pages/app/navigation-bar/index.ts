@@ -1,11 +1,10 @@
-import { Node, rootFolder, SelectionChange, setCurrentFolder, state } from "~app/state"
-import { findParents } from "~database/queries"
-import { AppEvent, NodeType } from "~app/types"
+import { Node, NodeType, rootFolder, SelectionChange, setCurrentFolder, state } from "~pages/app/state"
+import { findParents } from "~pages/app/queries"
+import { AppEvent, dispatch } from "~pages/app/events"
 
 import "./navigation-bar.css"
-import { dispatch } from "~app/helpers"
 import h from "hyperscript"
-import { appEmitter } from "~app"
+import { appEmitter } from "~pages/app"
 
 export function NavigationBar() {
   function renderBreadcrumb(currentFolder: Node) {

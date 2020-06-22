@@ -1,5 +1,4 @@
-import { ID, Node, rootFolder, state } from "~app/state"
-import { NodeType } from "~app/types"
+import { ID, Node, NodeType, rootFolder, state } from "~pages/app/state"
 
 export function findParents(lookupNode: Node): Node[] {
   if (lookupNode.parentId === null) {
