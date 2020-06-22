@@ -4,6 +4,7 @@
   line-height: 30px;
   background: white;
   display: flex;
+  border: 1px solid #e2e2e2;
 }
 
 .navigation-bar .buttons {
@@ -11,7 +12,7 @@
 }
 
 .navigation-bar .buttons>button {
-  padding: 6px;
+  padding: 6px 6px 4px;
   border: 0;
 }
 

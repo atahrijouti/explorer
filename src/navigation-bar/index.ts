@@ -109,7 +109,6 @@ export function NavigationBar() {
 
   return h(
     "header",
-    h("nav", { className: "navigation-bar" }, h("div", { className: "buttons" }, goUp), breadcrumb),
     h(
       "section",
       { className: "controls-bar" },
@@ -117,6 +116,8 @@ export function NavigationBar() {
       newFileBtn,
       renameNodeBtn,
       deleteNodeBtn
-    )
+    ),
+    h("nav", { className: "navigation-bar" }, h("div", { className: "buttons" }, goUp), breadcrumb),
+
   )
 }
