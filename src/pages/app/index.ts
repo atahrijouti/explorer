@@ -1,11 +1,11 @@
 import h from "hyperscript"
 
-import { Explorer } from "~explorer"
-import { NavigationBar } from "~navigation-bar"
+import { Explorer } from "~pages/app/explorer"
+import { AppEvent } from "~pages/app/events"
+import { NavigationBar } from "~pages/app/navigation-bar"
 
 import { rootFolder, setCurrentFolder } from "./state"
 import "./app.css"
-import { AppEvent } from "~app/types"
 
 export const appEmitter = new EventTarget()
 

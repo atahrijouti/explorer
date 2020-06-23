@@ -1,15 +1,18 @@
-import { Node, rootFolder, SelectionChange, setCurrentFolder, state } from "~app/state"
-import { findParents } from "~database/queries"
-import { AppEvent, NodeType } from "~app/types"
-
-import "./navigation-bar.css"
-import { dispatch } from "~app/helpers"
 import h from "hyperscript"
-import { appEmitter } from "~app"
+
+import { Node, NodeType, rootFolder, SelectionChange, setCurrentFolder, state } from "~pages/app/state"
+import { findParents } from "~pages/app/queries"
+import { AppEvent, dispatch } from "~pages/app/events"
+import { appEmitter } from "~pages/app"
+
 import folderImage from "~images/folder.png"
 import fileImage from "~images/file.png"
 import deleteFileImage from "~images/delete_file.png"
 import renameFileImage from "~images/rename_file.png"
+
+import "./navigation-bar.css"
+
+
 
 export function NavigationBar() {
   function renderBreadcrumb(currentFolder: Node) {
