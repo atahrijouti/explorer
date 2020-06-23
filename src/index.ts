@@ -1,6 +1,5 @@
-import { App } from "~app"
-import { AppEvent } from "~app/types"
-import { dispatch } from "~app/helpers"
+import { App } from "~pages/app"
+import { dispatch, AppEvent } from "~pages/app/events"
 
 const app = App()
 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion

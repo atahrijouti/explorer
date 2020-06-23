@@ -1,8 +1,9 @@
 import h from "hyperscript"
 
-import { Node } from "~app/state"
-import { AppEvent } from "~app/types"
-import { nodeIcon } from "~explorer/helpers/node-icon"
+import { Node } from "~pages/app/state"
+import { AppEvent } from "~pages/app/events"
+
+import { nodeIcon } from "./node-icon"
 
 type InputLabelProps = {
   name: string

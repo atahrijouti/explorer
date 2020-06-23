@@ -1,13 +1,19 @@
 import h from "hyperscript"
 
-import { Node, SelectionChange, setCurrentFolder, setSelectedNodeIds, state } from "~app/state"
-import { AppEvent, NodeType } from "~app/types"
-import { dispatch } from "~app/helpers"
-import { deleteSelectedNodes, storeNewNode } from "~database/queries"
+import {
+  NodeType,
+  Node,
+  SelectionChange,
+  setCurrentFolder,
+  setSelectedNodeIds,
+  state,
+} from "~pages/app/state"
+import { AppEvent, dispatch } from "~pages/app/events"
+import { deleteSelectedNodes, storeNewNode } from "~pages/app/queries"
 
-import { NodeComponent } from "./components/node"
+import { NodeComponent } from "./node"
 import "./explorer.scss"
-import { appEmitter } from "~app"
+import { appEmitter } from "~pages/app"
 
 export function Explorer() {
   function handleKeyUp(e: KeyboardEvent) {
@@ -153,7 +159,7 @@ export function Explorer() {
   document.addEventListener("keyup", handleKeyUp, false)
 
   let ul = buildUl()
-  const explorer = h("main", {className: "explorer"}, ul)
+  const explorer = h("main", { className: "explorer" }, ul)
 
   return explorer
 }

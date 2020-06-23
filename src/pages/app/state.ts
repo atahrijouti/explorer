@@ -1,8 +1,12 @@
-import { AppEvent, NodeType } from "./types"
-import { dispatch } from "./helpers"
-import { appEmitter } from "~app/index"
+import { appEmitter } from "~pages/app/index"
+
+import { dispatch, AppEvent } from "./events"
 
 export type ID = number | null
+export enum NodeType {
+  FOLDER = "FOLDER",
+  FILE = "FILE",
+}
 export type Node = {
   id: ID
   name: string
