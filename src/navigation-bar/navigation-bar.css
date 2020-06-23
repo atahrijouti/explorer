@@ -47,14 +47,14 @@
   padding-left: 1px;
 }
 
-.controls-bar > button {
+.control-button {
   border: 1px solid transparent;
   width: 52px;
   font-size: 11px;
   background: #f5f6f7;
 }
 
-.controls-bar > button:hover {
+.control-button:hover {
   border: 1px solid #7fbae6;
   background: #e5f1fa;
 }

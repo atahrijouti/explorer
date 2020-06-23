@@ -93,10 +93,34 @@ export function NavigationBar() {
 
   const goUp = h("button", "🡱")
   const breadcrumb = h("ul", { className: "breadcrumb" })
-  const newFolderBtn = h("button", h("img", { src: folderImage }), h("span", "New"), h("br"), h("span", "Folder"))
-  const newFileBtn = h("button", h("img", { src: fileImage }), h("span", "New"), h("br"), h("span", "File"))
-  const renameNodeBtn = h("button", h("img", { src: renameFileImage }), h("span", "Rename"))
-  const deleteNodeBtn = h("button", h("img", { src: deleteFileImage }), h("span", "Delete"))
+  const newFolderBtn = h(
+    "button",
+    { className: "control-button" },
+    h("img", { src: folderImage }),
+    h("span", "New"),
+    h("br"),
+    h("span", "Folder")
+  )
+  const newFileBtn = h(
+    "button",
+    { className: "control-button" },
+    h("img", { src: fileImage }),
+    h("span", "New"),
+    h("br"),
+    h("span", "File")
+  )
+  const renameNodeBtn = h(
+    "button",
+    { className: "control-button" },
+    h("img", { src: renameFileImage }),
+    h("span", "Rename")
+  )
+  const deleteNodeBtn = h(
+    "button",
+    { className: "control-button" },
+    h("img", { src: deleteFileImage }),
+    h("span", "Delete")
+  )
 
   //// Event Listeners
   goUp.addEventListener("click", navigateToParent, false)
