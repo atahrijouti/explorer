@@ -6,6 +6,10 @@ import "./navigation-bar.css"
 import { dispatch } from "~app/helpers"
 import h from "hyperscript"
 import { appEmitter } from "~app"
+import folderImage from "~images/folder.png"
+import fileImage from "~images/file.png"
+import deleteFileImage from "~images/delete_file.png"
+import renameFileImage from "~images/rename_file.png"
 
 export function NavigationBar() {
   function renderBreadcrumb(currentFolder: Node) {
@@ -89,10 +93,10 @@ export function NavigationBar() {
 
   const goUp = h("button", "🡱")
   const breadcrumb = h("ul", { className: "breadcrumb" })
-  const newFolderBtn = h("button", "New Folder")
-  const newFileBtn = h("button", "New File")
-  const renameNodeBtn = h("button", { disabled: true }, "Rename")
-  const deleteNodeBtn = h("button", { disabled: true }, "Delete")
+  const newFolderBtn = h("button", h("img", { src: folderImage }), h("span", "New"), h("br"), h("span", "Folder"))
+  const newFileBtn = h("button", h("img", { src: fileImage }), h("span", "New"), h("br"), h("span", "File"))
+  const renameNodeBtn = h("button", h("img", { src: renameFileImage }), h("span", "Rename"))
+  const deleteNodeBtn = h("button", h("img", { src: deleteFileImage }), h("span", "Delete"))
 
   //// Event Listeners
   goUp.addEventListener("click", navigateToParent, false)
@@ -117,7 +121,6 @@ export function NavigationBar() {
       renameNodeBtn,
       deleteNodeBtn
     ),
-    h("nav", { className: "navigation-bar" }, h("div", { className: "buttons" }, goUp), breadcrumb),
-
+    h("nav", { className: "navigation-bar" }, h("div", { className: "buttons" }, goUp), breadcrumb)
   )
 }
