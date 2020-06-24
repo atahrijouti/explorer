@@ -1,9 +1,16 @@
-import { Node, NodeType, rootFolder, SelectionChange, setCurrentFolder, state } from "~pages/app/state"
-import { findParents } from "~pages/app/queries"
-import { AppEvent, dispatch } from "~pages/app/events"
-
-import "./navigation-bar.css"
 import h from "hyperscript"
+
+import folderImage from "~images/folder.png"
+import fileImage from "~images/file.png"
+import deleteFileImage from "~images/delete_file.png"
+import renameFileImage from "~images/rename_file.png"
+
+import { ControlButton } from "./control-button"
+
+import "./navigation-bar.scss"
+import { findParents } from "~pages/app/queries"
+import { Node, NodeType, rootFolder, SelectionChange, setCurrentFolder, state } from "~pages/app/state"
+import { AppEvent, dispatch } from "~pages/app/events"
 import { appEmitter } from "~pages/app"
 
 export function NavigationBar() {
@@ -14,7 +21,7 @@ export function NavigationBar() {
     }
 
     breadcrumb.innerHTML = breadcrumbItems.reduce<string>((accumulator, node: Node) => {
-      return accumulator + `<li data-id="${node.id}"><span>${node.name}</span></li>`
+      return accumulator + `<li data-id="${node.id}" tabindex="0"><span>${node.name}</span></li>`
     }, "")
 
     Array.from(breadcrumb.querySelectorAll("li")).forEach((node) =>
@@ -86,12 +93,13 @@ export function NavigationBar() {
     setCurrentFolder(rootFolder)
   }
 
-  const goUp = h("button", "⬆️")
+  const goUp = h("button", "🡱", { className: "go-up" })
   const breadcrumb = h("ul", { className: "breadcrumb" })
-  const newFolderBtn = h("button", "New Folder")
-  const newFileBtn = h("button", "New File")
-  const renameNodeBtn = h("button", { disabled: true }, "Rename")
-  const deleteNodeBtn = h("button", { disabled: true }, "Delete")
+
+  const newFolderBtn = ControlButton({ label: "New Folder", image: folderImage })
+  const newFileBtn = ControlButton({ label: "New File", image: fileImage })
+  const renameNodeBtn = ControlButton({ label: "Rename", image: renameFileImage })
+  const deleteNodeBtn = ControlButton({ label: "Delete", image: deleteFileImage })
 
   //// Event Listeners
   goUp.addEventListener("click", navigateToParent, false)
@@ -108,7 +116,6 @@ export function NavigationBar() {
 
   return h(
     "header",
-    h("nav", { className: "navigation-bar" }, h("div", { className: "buttons" }, goUp), breadcrumb),
     h(
       "section",
       { className: "controls-bar" },
@@ -116,6 +123,7 @@ export function NavigationBar() {
       newFileBtn,
       renameNodeBtn,
       deleteNodeBtn
-    )
+    ),
+    h("nav", { className: "navigation-bar" }, h("div", { className: "buttons" }, goUp), breadcrumb)
   )
 }
