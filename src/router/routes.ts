@@ -2,13 +2,18 @@ import { Settings } from "~pages/settings"
 import { Test } from "~pages/test"
 import { App } from "~pages/app"
 
-export const Routes = [
-    {
-    pattern: /^settings/,
+type RouteConfig = {
+  pattern: RegExp
+  component: () => HTMLElement
+}
+
+export const ROUTES: readonly RouteConfig[] = [
+  {
+    pattern: /^settings$/,
     component: Settings,
   },
-    {
-    pattern: /^test/,
+  {
+    pattern: /^test$/,
     component: Test,
   },
   {

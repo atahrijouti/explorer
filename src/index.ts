@@ -1,7 +1,6 @@
-import { App } from "~pages/app"
-import { dispatch, AppEvent } from "~pages/app/events"
+import { Router } from "~router"
 
-const app = App()
 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-document.getElementById("root")!.appendChild(app)
-dispatch(app, AppEvent.MOUNTED)
+export const rootElement = document.getElementById("root")!
+
+Router()
