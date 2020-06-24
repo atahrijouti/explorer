@@ -2,7 +2,7 @@ import { Node, rootFolder, SelectionChange, setCurrentFolder, state } from "~app
 import { findParents } from "~database/queries"
 import { AppEvent, NodeType } from "~app/types"
 
-import "./navigation-bar.css"
+import "./navigation-bar.scss"
 import { dispatch } from "~app/helpers"
 import h from "hyperscript"
 import { appEmitter } from "~app"
@@ -10,6 +10,8 @@ import folderImage from "~images/folder.png"
 import fileImage from "~images/file.png"
 import deleteFileImage from "~images/delete_file.png"
 import renameFileImage from "~images/rename_file.png"
+
+import { ControlButton } from "./control-button"
 
 export function NavigationBar() {
   function renderBreadcrumb(currentFolder: Node) {
@@ -19,7 +21,7 @@ export function NavigationBar() {
     }
 
     breadcrumb.innerHTML = breadcrumbItems.reduce<string>((accumulator, node: Node) => {
-      return accumulator + `<li data-id="${node.id}"><span>${node.name}</span></li>`
+      return accumulator + `<li data-id="${node.id}" tabindex="0"><span>${node.name}</span></li>`
     }, "")
 
     Array.from(breadcrumb.querySelectorAll("li")).forEach((node) =>
@@ -93,34 +95,11 @@ export function NavigationBar() {
 
   const goUp = h("button", "🡱", { className: "go-up" })
   const breadcrumb = h("ul", { className: "breadcrumb" })
-  const newFolderBtn = h(
-    "button",
-    { className: "control-button" },
-    h("img", { src: folderImage }),
-    h("span", "New"),
-    h("br"),
-    h("span", "Folder")
-  )
-  const newFileBtn = h(
-    "button",
-    { className: "control-button" },
-    h("img", { src: fileImage }),
-    h("span", "New"),
-    h("br"),
-    h("span", "File")
-  )
-  const renameNodeBtn = h(
-    "button",
-    { className: "control-button" },
-    h("img", { src: renameFileImage }),
-    h("span", "Rename")
-  )
-  const deleteNodeBtn = h(
-    "button",
-    { className: "control-button" },
-    h("img", { src: deleteFileImage }),
-    h("span", "Delete")
-  )
+
+  const newFolderBtn = ControlButton({ label: "New Folder", image: folderImage })
+  const newFileBtn = ControlButton({ label: "New File", image: fileImage })
+  const renameNodeBtn = ControlButton({ label: "Rename", image: renameFileImage })
+  const deleteNodeBtn = ControlButton({ label: "Delete", image: deleteFileImage })
 
   //// Event Listeners
   goUp.addEventListener("click", navigateToParent, false)
