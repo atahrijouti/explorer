@@ -19,7 +19,7 @@ import {
 } from "~pages/app/state"
 import { AppEvent, dispatch } from "~pages/app/events"
 import { appEmitter } from "~pages/app"
-import { Link } from "~router"
+import { navigateTo } from "~router"
 
 export function NavigationBar() {
   function renderBreadcrumb(currentFolder: Node) {
@@ -122,8 +122,6 @@ export function NavigationBar() {
   appEmitter.addEventListener(AppEvent.FOLDER_CHANGED, handleFolderChanged)
   appEmitter.addEventListener(AppEvent.SELECTION_CHANGED, handleSelectionChanged)
 
-  function LinkButton() {}
-
   return h(
     "header",
     h(
@@ -133,10 +131,35 @@ export function NavigationBar() {
       newFileBtn,
       renameNodeBtn,
       deleteNodeBtn,
-      ControlButton({ label: "home", image: folderImage }),
-      ControlButton({ label: "settings", image: folderImage }),
-      ControlButton({ label: "test", image: folderImage }),
-      ControlButton({ label: "somewhere", image: folderImage })
+      ControlButton({
+        label: "home",
+        image: folderImage,
+        onclick: () => {
+          console.log("go home")
+          navigateTo("/", "Home")
+        },
+      }),
+      ControlButton({
+        label: "settings",
+        image: folderImage,
+        onclick: () => {
+          navigateTo("/settings", "Settings")
+        },
+      }),
+      ControlButton({
+        label: "test",
+        image: folderImage,
+        onclick: () => {
+          navigateTo("/test", "Test")
+        },
+      }),
+      ControlButton({
+        label: "somewhere",
+        image: folderImage,
+        onclick: () => {
+          navigateTo("/somewhere", "Somewhere")
+        },
+      })
     ),
     h("nav", { className: "navigation-bar" }, h("div", { className: "buttons" }, goUp), breadcrumb)
   )

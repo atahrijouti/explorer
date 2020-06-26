@@ -5,7 +5,7 @@ type ControlButtonProps = {
   label: Node | string
   image: string
   className?: string
-}
+} & Partial<HTMLButtonElement>
 
 export const ControlButton = ({
   label,
@@ -16,7 +16,7 @@ export const ControlButton = ({
 }: ControlButtonProps) => {
   return h(
     "button",
-    { className: cx("control-button", className), props },
+    { className: cx("control-button", className), ...props },
     h("img", { src: image }),
     h("span", { className: "label" }, label)
   )
