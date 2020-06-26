@@ -9,11 +9,11 @@ type RouteConfig = {
 
 export const ROUTES: readonly RouteConfig[] = [
   {
-    pattern: /^settings$/,
+    pattern: /^\/settings$/,
     component: Settings,
   },
   {
-    pattern: /^test$/,
+    pattern: /^\/test$/,
     component: Test,
   },
   {

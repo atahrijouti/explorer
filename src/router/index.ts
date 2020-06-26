@@ -13,7 +13,7 @@ export type LinkProps = {
 export function Link({ path, title, children, className }: LinkProps) {
   function handlClick(e: MouseEvent) {
     e.preventDefault()
-    navigate(path, title)
+    navigateTo(path, title)
   }
 
   return h(
@@ -23,7 +23,7 @@ export function Link({ path, title, children, className }: LinkProps) {
   )
 }
 
-export function navigate(path: string, title: string) {
+export function navigateTo(path: string, title: string) {
   pushState(path, title)
   updateRoute(cleanPath(path))
 }
@@ -36,7 +36,7 @@ function cleanPath(path: string) {
   return path.replace(/\/$/, "")
 }
 
-function getPath() {
+function getPathFromWindowUrl() {
   return cleanPath(window.location.pathname)
 }
 
@@ -68,6 +68,14 @@ function updateRoute(path: string) {
   }
 }
 
+function reflectRoute() {
+  updateRoute(getPathFromWindowUrl())
+}
+
 export function Router() {
-  updateRoute(getPath())
+  reflectRoute()
+}
+
+window.onpopstate = function () {
+  reflectRoute()
 }
