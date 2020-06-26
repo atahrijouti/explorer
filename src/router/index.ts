@@ -8,8 +8,9 @@ export type LinkProps = {
   path: string
   title: string
   className?: string
+  children: Node | Node[]
 }
-export function Link({ path, title, className }: LinkProps) {
+export function Link({ path, title, children, className }: LinkProps) {
   function handlClick(e: MouseEvent) {
     e.preventDefault()
     navigate(path, title)
@@ -18,7 +19,7 @@ export function Link({ path, title, className }: LinkProps) {
   return h(
     "a",
     { className: cx("link", className), href: path, ["onclick"]: handlClick, title },
-    title
+    children
   )
 }
 
@@ -32,7 +33,7 @@ export function pushState(path: string, title: string) {
 }
 
 function cleanPath(path: string) {
-  return path.replace(/\/$/, "").replace(/^\//, "")
+  return path.replace(/\/$/, "")
 }
 
 function getPath() {
@@ -54,15 +55,16 @@ function updateRoute(path: string) {
 
   if (urlMatch.component === currentRouteHandler && currentRouteComponent != null) {
     dispatch(currentRouteComponent, AppEvent.ROUTE_CHANGED)
-    console.log("ROUTECHANGED")
   } else {
+    if (currentRouteComponent != null) {
+      dispatch(currentRouteComponent, AppEvent.UNMOUNTED)
+    }
     currentRouteHandler = urlMatch.component
     const routeElement = currentRouteHandler()
     rootElement.innerHTML = ""
     currentRouteComponent = routeElement
     rootElement.appendChild(routeElement)
     dispatch(routeElement, AppEvent.MOUNTED)
-    console.log("MOUNTED NEW")
   }
 }
 

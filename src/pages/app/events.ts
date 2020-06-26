@@ -1,5 +1,6 @@
 export enum AppEvent {
   MOUNTED = "e-mounted",
+  UNMOUNTED = "e-unmounted",
   ROUTE_CHANGED = "e-route-changed",
   SELECTION_CHANGED = "e-selection-changed",
   FOLDER_CHANGED = "e-folder-changed",

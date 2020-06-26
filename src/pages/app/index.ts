@@ -15,7 +15,11 @@ export function App() {
     {
       className: "app",
       [`on${AppEvent.MOUNTED}`]: () => {
+        console.log("mounted app")
         setCurrentFolder(rootFolder)
+      },
+      [`on${AppEvent.UNMOUNTED}`]: () => {
+        console.log("unmounted app")
       },
     },
     NavigationBar(),

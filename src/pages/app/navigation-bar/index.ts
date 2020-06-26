@@ -122,6 +122,8 @@ export function NavigationBar() {
   appEmitter.addEventListener(AppEvent.FOLDER_CHANGED, handleFolderChanged)
   appEmitter.addEventListener(AppEvent.SELECTION_CHANGED, handleSelectionChanged)
 
+  function LinkButton() {}
+
   return h(
     "header",
     h(
@@ -131,7 +133,10 @@ export function NavigationBar() {
       newFileBtn,
       renameNodeBtn,
       deleteNodeBtn,
-      Link({ path: "atj", title: "atj" })
+      ControlButton({ label: "home", image: folderImage }),
+      ControlButton({ label: "settings", image: folderImage }),
+      ControlButton({ label: "test", image: folderImage }),
+      ControlButton({ label: "somewhere", image: folderImage })
     ),
     h("nav", { className: "navigation-bar" }, h("div", { className: "buttons" }, goUp), breadcrumb)
   )
