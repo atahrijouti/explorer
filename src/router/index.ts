@@ -76,6 +76,7 @@ export function Router() {
   reflectRoute()
 }
 
+// handle back and forward browser hisotry buttons, otherwise route is not reflect on content
 window.onpopstate = function () {
   reflectRoute()
 }
