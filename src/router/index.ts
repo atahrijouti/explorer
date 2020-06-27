@@ -23,10 +23,18 @@ export function Link({ path, title, children, className }: LinkProps) {
   )
 }
 
+function isRelativePath(path: string) {
+  console.log(path)
+  return path[0] !== "/"
+}
+
 export function navigateTo(path: string, title: string) {
   const cleansedPath = cleanPath(path)
-  pushState(cleansedPath, title)
-  updateRoute(cleansedPath)
+  const isRelative = isRelativePath(cleansedPath)
+  const redirectTo = isRelative ? `${getPathFromWindowUrl()}/${cleansedPath}` : cleansedPath
+  console.log({ isRelative, redirectTo })
+  pushState(redirectTo, title)
+  updateRoute(redirectTo)
 }
 
 export function pushState(path: string, title: string) {
@@ -34,6 +42,9 @@ export function pushState(path: string, title: string) {
 }
 
 function cleanPath(path: string) {
+  if (path === "/") {
+    return path
+  }
   return path.replace(/\/$/, "")
 }
 
@@ -46,24 +57,31 @@ function matchPath(path: string) {
 }
 
 let currentRouteHandler: (() => HTMLElement) | null = null
-let currentRouteComponent: HTMLElement | null = null
+let currentRoutePage: HTMLElement | null = null
 
-function updateRoute(path: string) {
-  const urlMatch = matchPath(path)
+function updateRoute(absolutePath: string) {
+  if (isRelativePath(absolutePath)) {
+    throw new Error(`The path must be in absolute form. Received \`${absolutePath}\` `)
+  }
+
+  const urlMatch = matchPath(absolutePath.substr(1))
   if (urlMatch == null) {
     return
   }
 
-  if (urlMatch.component === currentRouteHandler && currentRouteComponent != null) {
-    dispatch(currentRouteComponent, AppEvent.ROUTE_CHANGED)
+  if (urlMatch.page === currentRouteHandler && currentRoutePage != null) {
+    dispatch(currentRoutePage, AppEvent.ROUTE_CHANGED)
   } else {
-    if (currentRouteComponent != null) {
-      dispatch(currentRouteComponent, AppEvent.UNMOUNTED)
+    // first unmount current page
+    if (currentRoutePage != null) {
+      dispatch(currentRoutePage, AppEvent.UNMOUNTED)
     }
-    currentRouteHandler = urlMatch.component
-    const routeElement = currentRouteHandler()
     rootElement.innerHTML = ""
-    currentRouteComponent = routeElement
+
+    // then hook new page
+    currentRouteHandler = urlMatch.page
+    const routeElement = currentRouteHandler()
+    currentRoutePage = routeElement
     rootElement.appendChild(routeElement)
     dispatch(routeElement, AppEvent.MOUNTED)
   }

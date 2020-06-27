@@ -1,5 +1,5 @@
 import h from "hyperscript"
 
-export function Test() {
+export function TestPage() {
   return h("div", h("h1", "Test"))
 }

@@ -9,7 +9,7 @@ import "./app.css"
 
 export const appEmitter = new EventTarget()
 
-export function App() {
+export function AppPage() {
   return h(
     "div",
     {

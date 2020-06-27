@@ -1,23 +1,23 @@
-import { Settings } from "~pages/settings"
-import { Test } from "~pages/test"
-import { App } from "~pages/app"
+import { SettingsPage } from "~pages/settings"
+import { TestPage } from "~pages/test"
+import { AppPage } from "~pages/app"
 
 type RouteConfig = {
   pattern: RegExp
-  component: () => HTMLElement
+  page: () => HTMLElement
 }
 
 export const ROUTES: readonly RouteConfig[] = [
   {
-    pattern: /^\/settings$/,
-    component: Settings,
+    pattern: /^settings$/,
+    page: SettingsPage,
   },
   {
-    pattern: /^\/test$/,
-    component: Test,
+    pattern: /^test$/,
+    page: TestPage,
   },
   {
     pattern: /.*/,
-    component: App,
+    page: AppPage,
   },
 ]

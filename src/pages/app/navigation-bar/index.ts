@@ -135,7 +135,6 @@ export function NavigationBar() {
         label: "home",
         image: folderImage,
         onclick: () => {
-          console.log("go home")
           navigateTo("/", "Home")
         },
       }),
