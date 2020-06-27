@@ -24,8 +24,9 @@ export function Link({ path, title, children, className }: LinkProps) {
 }
 
 export function navigateTo(path: string, title: string) {
-  pushState(path, title)
-  updateRoute(cleanPath(path))
+  const cleansedPath = cleanPath(path)
+  pushState(cleansedPath, title)
+  updateRoute(cleansedPath)
 }
 
 export function pushState(path: string, title: string) {
