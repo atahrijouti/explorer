@@ -5,7 +5,7 @@ An adventure down mount JavaScript. And what an adventure.
 
 ## Background
 
-Once upon a time, [@VincentHoorpah](https://github.com/VincentHoorpah) gave me a task to as part of the recruitment process for a full-stack position at his firm. ([a copy can be found here](https://github.com/abderrahmane-tj/file-manager)
+Once upon a time, during a recruitment process for a full-stack position I was given a task. ([a copy can be found here](https://github.com/abderrahmane-tj/file-manager)
 
 The task was to make a Windows Explorer inspired app with functional folder navigation, upload of files and a working back-end. The task which seemingly small from the description, held many architectural challenges such as how to model the data to represent a folder structure, or how to manage state and history. I had done the task in 3.5 days, with one component holding logic and render parts that would usually be split into multiple small parts if one values their sanity. Basically, something you would write when doing a hackathon. Low quality, high pretend. 
 
