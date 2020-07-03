@@ -11,7 +11,7 @@ export type LinkProps = {
   children: Node | Node[]
 }
 export function Link({ path, title, children, className }: LinkProps) {
-  function handlClick(e: MouseEvent) {
+  function handleClick(e: MouseEvent) {
     e.preventDefault()
     navigateTo(path, title)
   }
