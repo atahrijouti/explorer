@@ -18,7 +18,7 @@ export function Link({ path, title, children, className }: LinkProps) {
 
   return h(
     "a",
-    { className: cx("link", className), href: path, ["onclick"]: handlClick, title },
+    { className: cx("link", className), href: path, ["onclick"]: handleClick, title },
     children
   )
 }
