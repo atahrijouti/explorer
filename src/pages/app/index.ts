@@ -9,13 +9,17 @@ import "./app.css"
 
 export const appEmitter = new EventTarget()
 
-export function App() {
+export function AppPage() {
   return h(
     "div",
     {
       className: "app",
       [`on${AppEvent.MOUNTED}`]: () => {
+        console.log("mounted app")
         setCurrentFolder(rootFolder)
+      },
+      [`on${AppEvent.UNMOUNTED}`]: () => {
+        console.log("unmounted app")
       },
     },
     NavigationBar(),

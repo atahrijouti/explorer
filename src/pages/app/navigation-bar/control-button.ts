@@ -1,13 +1,22 @@
 import h from "hyperscript"
+import cx from "classnames"
 
 type ControlButtonProps = {
-  label: string
+  label: Node | string
   image: string
-}
-export const ControlButton = ({ label, image }: ControlButtonProps) => {
+  className?: string
+} & Partial<HTMLButtonElement>
+
+export const ControlButton = ({
+  label,
+  image,
+  className,
+  type = "button",
+  ...props
+}: ControlButtonProps) => {
   return h(
     "button",
-    { className: "control-button" },
+    { className: cx("control-button", className), ...props },
     h("img", { src: image }),
     h("span", { className: "label" }, label)
   )

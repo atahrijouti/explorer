@@ -8,22 +8,28 @@ import { Node, NodeType, state } from "~pages/app/state"
 
 export function nodeIcon(node: Node): string {
   switch (node.type) {
-    case NodeType.FILE: return getFileImage(node)
-    case NodeType.FOLDER: return getFolderImage(node)
-    default: return unknownImage
+    case NodeType.FILE:
+      return getFileImage(node)
+    case NodeType.FOLDER:
+      return getFolderImage(node)
+    default:
+      return unknownImage
   }
 }
 
 function getFolderImage(node: Node) {
-  const childCount = state.nodes.filter(child => child.parentId === node.id).length
+  const childCount = state.nodes.filter((child) => child.parentId === node.id).length
   return childCount > 0 ? fullFolderImage : folderImage
 }
 
 function getFileImage(node: Node) {
-  const extension  = node.name.split('.').pop()
+  const extension = node.name.split(".").pop()
   switch (extension) {
-    case 'txt': return textFileImage
-    case 'mp3': return audioFileImage
-    default: return fileImage
+    case "txt":
+      return textFileImage
+    case "mp3":
+      return audioFileImage
+    default:
+      return fileImage
   }
 }

@@ -12,7 +12,10 @@ a:hover {
   text-decoration: underline;
 }
 
-html, body, #root, .app  {
+html,
+body,
+#root,
+.app {
   height: 100vh;
   width: 100vw;
 }
@@ -24,7 +27,7 @@ html, body, #root, .app  {
   flex-direction: column;
 }
 
-body  {
+body {
   font-family: "Segoe UI", sans-serif;
   font-size: 14px;
 }

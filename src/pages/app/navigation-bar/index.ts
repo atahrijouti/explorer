@@ -9,9 +9,17 @@ import { ControlButton } from "./control-button"
 
 import "./navigation-bar.scss"
 import { findParents } from "~pages/app/queries"
-import { Node, NodeType, rootFolder, SelectionChange, setCurrentFolder, state } from "~pages/app/state"
+import {
+  Node,
+  NodeType,
+  rootFolder,
+  SelectionChange,
+  setCurrentFolder,
+  state,
+} from "~pages/app/state"
 import { AppEvent, dispatch } from "~pages/app/events"
 import { appEmitter } from "~pages/app"
+import { navigateTo } from "~router"
 
 export function NavigationBar() {
   function renderBreadcrumb(currentFolder: Node) {
@@ -122,7 +130,35 @@ export function NavigationBar() {
       newFolderBtn,
       newFileBtn,
       renameNodeBtn,
-      deleteNodeBtn
+      deleteNodeBtn,
+      ControlButton({
+        label: "home",
+        image: folderImage,
+        onclick: () => {
+          navigateTo("/", "Home")
+        },
+      }),
+      ControlButton({
+        label: "settings",
+        image: folderImage,
+        onclick: () => {
+          navigateTo("/settings", "Settings")
+        },
+      }),
+      ControlButton({
+        label: "test",
+        image: folderImage,
+        onclick: () => {
+          navigateTo("/test", "Test")
+        },
+      }),
+      ControlButton({
+        label: "somewhere",
+        image: folderImage,
+        onclick: () => {
+          navigateTo("/somewhere", "Somewhere")
+        },
+      })
     ),
     h("nav", { className: "navigation-bar" }, h("div", { className: "buttons" }, goUp), breadcrumb)
   )
