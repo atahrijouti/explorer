@@ -1,6 +1,6 @@
 import { SettingsPage } from "~pages/settings"
 import { TestPage } from "~pages/test"
-import { AppPage } from "~pages/explorer"
+import { ExplorerPage } from "~pages/explorer"
 
 type RouteConfig = {
   pattern: RegExp
@@ -18,6 +18,6 @@ export const ROUTES: readonly RouteConfig[] = [
   },
   {
     pattern: /.*/,
-    page: AppPage,
+    page: ExplorerPage,
   },
 ]

@@ -15,7 +15,7 @@ import { NodeComponent } from "./node"
 import "./node-list.scss"
 import { appEmitter } from "~pages/explorer"
 
-export function Explorer() {
+export function NodeList() {
   function handleKeyUp(e: KeyboardEvent) {
     if (e.key === "F2") {
       startRenaming()
@@ -159,7 +159,7 @@ export function Explorer() {
   document.addEventListener("keyup", handleKeyUp, false)
 
   let ul = buildUl()
-  const explorer = h("main", { className: "explorer" }, ul)
+  const explorer = h("main", { className: "node-list" }, ul)
 
   return explorer
 }

@@ -1,6 +1,6 @@
 import h from "hyperscript"
 
-import { Explorer } from "~pages/explorer/node-list"
+import { NodeList } from "~pages/explorer/node-list"
 import { AppEvent } from "~pages/explorer/events"
 import { NavigationBar } from "~pages/explorer/navigation-bar"
 
@@ -9,11 +9,11 @@ import "./explorer.css"
 
 export const appEmitter = new EventTarget()
 
-export function AppPage() {
+export function ExplorerPage() {
   return h(
     "div",
     {
-      className: "app",
+      className: "explorer",
       [`on${AppEvent.MOUNTED}`]: () => {
         console.log("mounted app")
         setCurrentFolder(rootFolder)
@@ -23,6 +23,6 @@ export function AppPage() {
       },
     },
     NavigationBar(),
-    Explorer()
+    NodeList()
   )
 }
