@@ -1,4 +1,4 @@
-import { appEmitter } from "~pages/app/index"
+import { appEmitter } from "~pages/explorer/index"
 
 import { dispatch, AppEvent } from "./events"
 

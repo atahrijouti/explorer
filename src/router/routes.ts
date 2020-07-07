@@ -1,6 +1,6 @@
 import { SettingsPage } from "~pages/settings"
 import { TestPage } from "~pages/test"
-import { AppPage } from "~pages/app"
+import { AppPage } from "~pages/explorer"
 
 type RouteConfig = {
   pattern: RegExp

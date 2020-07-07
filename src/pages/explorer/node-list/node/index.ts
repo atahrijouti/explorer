@@ -1,7 +1,7 @@
 import h from "hyperscript"
 
-import { Node } from "~pages/app/state"
-import { AppEvent } from "~pages/app/events"
+import { Node } from "~pages/explorer/state"
+import { AppEvent } from "~pages/explorer/events"
 
 import { nodeIcon } from "./node-icon"
 

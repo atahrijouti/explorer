@@ -8,7 +8,7 @@ import renameFileImage from "~images/rename_file.png"
 import { ControlButton } from "./control-button"
 
 import "./navigation-bar.scss"
-import { findParents } from "~pages/app/queries"
+import { findParents } from "~pages/explorer/queries"
 import {
   Node,
   NodeType,
@@ -16,9 +16,9 @@ import {
   SelectionChange,
   setCurrentFolder,
   state,
-} from "~pages/app/state"
-import { AppEvent, dispatch } from "~pages/app/events"
-import { appEmitter } from "~pages/app"
+} from "~pages/explorer/state"
+import { AppEvent, dispatch } from "~pages/explorer/events"
+import { appEmitter } from "~pages/explorer"
 
 export function NavigationBar() {
   function renderBreadcrumb(currentFolder: Node) {

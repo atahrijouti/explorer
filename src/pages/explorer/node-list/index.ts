@@ -7,13 +7,13 @@ import {
   setCurrentFolder,
   setSelectedNodeIds,
   state,
-} from "~pages/app/state"
-import { AppEvent, dispatch } from "~pages/app/events"
-import { deleteSelectedNodes, storeNewNode } from "~pages/app/queries"
+} from "~pages/explorer/state"
+import { AppEvent, dispatch } from "~pages/explorer/events"
+import { deleteSelectedNodes, storeNewNode } from "~pages/explorer/queries"
 
 import { NodeComponent } from "./node"
-import "./explorer.scss"
-import { appEmitter } from "~pages/app"
+import "./node-list.scss"
+import { appEmitter } from "~pages/explorer"
 
 export function Explorer() {
   function handleKeyUp(e: KeyboardEvent) {

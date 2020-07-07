@@ -1,5 +1,5 @@
 import { ROUTES } from "~router/routes"
-import { AppEvent, dispatch } from "~pages/app/events"
+import { AppEvent, dispatch } from "~pages/explorer/events"
 import { rootElement } from "~index"
 
 function isRelativePath(path: string) {
