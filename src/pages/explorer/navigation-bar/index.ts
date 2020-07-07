@@ -19,7 +19,12 @@ import {
 } from "~pages/explorer/state"
 import { AppEvent, dispatch } from "~pages/explorer/events"
 import { appEmitter } from "~pages/explorer"
+import { navigateTo } from "~router"
 
+type BreadKneader = {
+  render: string
+  path: string
+}
 export function NavigationBar() {
   function renderBreadcrumb(currentFolder: Node) {
     const breadcrumbItems = findParents(currentFolder)
@@ -27,9 +32,16 @@ export function NavigationBar() {
       breadcrumbItems.push(state.currentFolder)
     }
 
-    breadcrumb.innerHTML = breadcrumbItems.reduce<string>((accumulator, node: Node) => {
-      return accumulator + `<li data-id="${node.id}" tabindex="0"><span>${node.name}</span></li>`
-    }, "")
+    breadcrumb.innerHTML = breadcrumbItems.reduce<BreadKneader>(
+      (accumulator, node: Node) => {
+        if (node != rootFolder) {
+          accumulator.path = accumulator.path + "/" + node.name
+        }
+        accumulator.render += `<li data-id="${node.id}" data-path="${accumulator.path}" tabindex="0"><span>${node.name}</span></li>`
+        return accumulator
+      },
+      { path: "", render: "" }
+    ).render
 
     Array.from(breadcrumb.querySelectorAll("li")).forEach((node) =>
       node.addEventListener("click", respondToBreadcrumbClick)
@@ -68,7 +80,11 @@ export function NavigationBar() {
   function respondToBreadcrumbClick(e: MouseEvent) {
     const currentTarget = e.currentTarget as HTMLLIElement
     const rawId = currentTarget.dataset.id
+    const path = currentTarget.dataset.path
+
     if (rawId === "null") {
+      navigateTo("/", "Home")
+
       goToRoot()
       return
     }
@@ -80,6 +96,7 @@ export function NavigationBar() {
       return
     }
     setCurrentFolder(clickedNode)
+    navigateTo(`${path}`, clickedNode.name)
   }
 
   function navigateToParent() {

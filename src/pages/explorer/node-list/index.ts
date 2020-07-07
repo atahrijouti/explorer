@@ -14,6 +14,7 @@ import { deleteSelectedNodes, storeNewNode } from "~pages/explorer/queries"
 import { NodeComponent } from "./node"
 import "./node-list.scss"
 import { appEmitter } from "~pages/explorer"
+import { navigateTo } from "~router"
 
 export function NodeList() {
   function handleKeyUp(e: KeyboardEvent) {
@@ -66,15 +67,11 @@ export function NodeList() {
     if ((e.target as HTMLElement).classList.contains("rename")) {
       return
     }
-    const nextId = node.id
-    const clickedNode = state.nodes.find((node) => node.id === nextId)
-    if (clickedNode == null) {
-      return
-    }
-    if (clickedNode.type === NodeType.FOLDER) {
-      setCurrentFolder(clickedNode)
+    if (node.type === NodeType.FOLDER) {
+      setCurrentFolder(node)
+      navigateTo(node.name, node.name)
     } else {
-      console.log(`${clickedNode.name} is a file : OPEN`)
+      console.log(`${node.name} is a file : OPEN`)
     }
     state.isRenaming = false
   }
