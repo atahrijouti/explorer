@@ -1,38 +1,16 @@
-import h from "hyperscript"
-import cx from "classnames"
 import { ROUTES } from "~router/routes"
 import { AppEvent, dispatch } from "~pages/app/events"
 import { rootElement } from "~index"
 
-export type LinkProps = {
-  path: string
-  title: string
-  className?: string
-  children: Node | Node[]
-}
-export function Link({ path, title, children, className }: LinkProps) {
-  function handleClick(e: MouseEvent) {
-    e.preventDefault()
-    navigateTo(path, title)
-  }
-
-  return h(
-    "a",
-    { className: cx("link", className), href: path, ["onclick"]: handleClick, title },
-    children
-  )
-}
-
 function isRelativePath(path: string) {
-  console.log(path)
-  return path[0] !== "/"
+  return !path.startsWith("/")
 }
 
 export function navigateTo(path: string, title: string) {
   const cleansedPath = cleanPath(path)
   const isRelative = isRelativePath(cleansedPath)
-  const redirectTo = isRelative ? `${getPathFromWindowUrl()}/${cleansedPath}` : cleansedPath
-  console.log({ isRelative, redirectTo })
+  const prefix = getPathFromWindowUrl() === "/" ? "" : getPathFromWindowUrl()
+  const redirectTo = isRelative ? `${prefix}/${cleansedPath}` : cleansedPath
   pushState(redirectTo, title)
   updateRoute(redirectTo)
 }
@@ -56,12 +34,12 @@ function matchPath(path: string) {
   return ROUTES.find((route) => path.match(route.pattern))
 }
 
-let currentRouteHandler: (() => HTMLElement) | null = null
-let currentRoutePage: HTMLElement | null = null
+let currentRouteFunction: (() => HTMLElement) | null = null
+let currentRoutePageDomElement: HTMLElement | null = null
 
 function updateRoute(absolutePath: string) {
   if (isRelativePath(absolutePath)) {
-    throw new Error(`The path must be in absolute form. Received \`${absolutePath}\` `)
+    throw new Error(`The path must be in absolute form. Received \`${absolutePath}\``)
   }
 
   const urlMatch = matchPath(absolutePath.substr(1))
@@ -69,19 +47,19 @@ function updateRoute(absolutePath: string) {
     return
   }
 
-  if (urlMatch.page === currentRouteHandler && currentRoutePage != null) {
-    dispatch(currentRoutePage, AppEvent.ROUTE_CHANGED)
+  if (urlMatch.page === currentRouteFunction && currentRoutePageDomElement != null) {
+    dispatch(currentRoutePageDomElement, AppEvent.ROUTE_CHANGED)
   } else {
     // first unmount current page
-    if (currentRoutePage != null) {
-      dispatch(currentRoutePage, AppEvent.UNMOUNTED)
+    if (currentRoutePageDomElement != null) {
+      dispatch(currentRoutePageDomElement, AppEvent.UNMOUNTED)
     }
     rootElement.innerHTML = ""
 
     // then hook new page
-    currentRouteHandler = urlMatch.page
-    const routeElement = currentRouteHandler()
-    currentRoutePage = routeElement
+    currentRouteFunction = urlMatch.page
+    const routeElement = currentRouteFunction()
+    currentRoutePageDomElement = routeElement
     rootElement.appendChild(routeElement)
     dispatch(routeElement, AppEvent.MOUNTED)
   }
@@ -95,7 +73,7 @@ export function Router() {
   reflectRoute()
 }
 
-// handle back and forward browser hisotry buttons, otherwise route is not reflect on content
+// handle back and forward browser history buttons, otherwise route is not reflect on content
 window.onpopstate = function () {
   reflectRoute()
 }
