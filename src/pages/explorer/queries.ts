@@ -1,11 +1,29 @@
-import { ID, Node, NodeType, rootFolder, state } from "~pages/explorer/state"
+import { Node, rootFolder, state } from "~pages/explorer/state"
+import { ID, NodeType } from "~pages/explorer/types"
+
+let nextId = 13
+
+export const dbTable: Node[] = [
+  { id: 1, name: "Videos", type: NodeType.FOLDER, parentId: null },
+  { id: 2, name: "Pictures", type: NodeType.FOLDER, parentId: null },
+  { id: 3, name: "Documents", type: NodeType.FOLDER, parentId: null },
+  { id: 4, name: "Music", type: NodeType.FOLDER, parentId: null },
+  { id: 7, name: "New folder", type: NodeType.FOLDER, parentId: null },
+  { id: 8, name: "New folder (2)", type: NodeType.FOLDER, parentId: null },
+  { id: 5, name: "CV", type: NodeType.FOLDER, parentId: 3 },
+  { id: 6, name: "Amine Tirecht.pdf", type: NodeType.FILE, parentId: 5 },
+  { id: 9, name: "Hello world.txt", type: NodeType.FILE, parentId: null },
+  { id: 10, name: "How is it going.mp3", type: NodeType.FILE, parentId: null },
+  { id: 11, name: "desktop.ini", type: NodeType.FILE, parentId: null },
+  { id: 12, name: "random.atirecht", type: NodeType.FILE, parentId: null },
+]
 
 export function findParents(lookupNode: Node): Node[] {
   if (lookupNode.parentId === null) {
     return [rootFolder]
   }
 
-  const parent = state.nodes.find((node) => node.id === lookupNode.parentId)
+  const parent = dbTable.find((node) => node.id === lookupNode.parentId)
 
   if (parent == null) {
     return []
@@ -13,16 +31,42 @@ export function findParents(lookupNode: Node): Node[] {
   return [...findParents(parent), parent]
 }
 
+export function findNodeById(id: ID) {
+  return dbTable.find((n) => n.id === id)
+}
+
+export function findNodeChildren(id: ID) {
+  return dbTable.filter((n) => n.parentId === id)
+}
+
+export function getNodeAndChildren(id: ID) {
+  if (id === rootFolder.id) {
+    return {
+      node: rootFolder,
+      children: findNodeChildren(rootFolder.id),
+    }
+  }
+
+  const node = findNodeById(id)
+  if (node == null) {
+    return null
+  }
+  return {
+    node,
+    children: findNodeChildren(id),
+  }
+}
+
 export function storeNewNode(name: string, type: NodeType) {
   const suitableName = getSuitableName(name, type, state.currentFolder.id)
   const newlyCreatedNode = {
-    id: state.nextId,
+    id: nextId,
     name: suitableName,
     type,
     parentId: state.currentFolder.id,
   }
-  state.nodes.push(newlyCreatedNode)
-  state.nextId++
+  dbTable.push(newlyCreatedNode)
+  nextId++
 
   return newlyCreatedNode
 }
@@ -39,7 +83,7 @@ function deleteNodes(ids: number[]) {
     const head = buffer[0]
 
     // find children of the current node
-    const children = state.nodes.reduce<number[]>(function (acc, node) {
+    const children = dbTable.reduce<number[]>(function (acc, node) {
       if (node.parentId === head && node.id != null) {
         acc.push(node.id)
       }
@@ -51,15 +95,15 @@ function deleteNodes(ids: number[]) {
 
     // removes head from buffer & from state
     buffer.shift()
-    const stateNodeIndex = state.nodes.findIndex((node) => node.id === head)
-    state.nodes.splice(stateNodeIndex, 1)
+    const stateNodeIndex = dbTable.findIndex((node) => node.id === head)
+    dbTable.splice(stateNodeIndex, 1)
   }
 }
 
 function getSuitableName(newName: string, nodeType: NodeType, parentId: ID) {
   const regex = new RegExp(`^${newName}(?: \\(([0-9]*)\\))?$`)
 
-  const suffix = state.nodes.reduce<number | null>((max, node) => {
+  const suffix = dbTable.reduce<number | null>((max, node) => {
     const matches = node.name.match(regex)
 
     // if we find a matching name in the current folder & same type

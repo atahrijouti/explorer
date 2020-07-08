@@ -11,7 +11,6 @@ import "./navigation-bar.scss"
 import { findParents } from "~pages/explorer/queries"
 import {
   Node,
-  NodeType,
   rootFolder,
   SelectionChange,
   setCurrentFolder,
@@ -20,6 +19,7 @@ import {
 import { AppEvent, dispatch } from "~pages/explorer/events"
 import { appEmitter } from "~pages/explorer"
 import { navigateTo } from "~router"
+import { NodeType } from "~pages/explorer/types"
 
 type BreadKneader = {
   render: string
@@ -80,23 +80,14 @@ export function NavigationBar() {
   function respondToBreadcrumbClick(e: MouseEvent) {
     const currentTarget = e.currentTarget as HTMLLIElement
     const rawId = currentTarget.dataset.id
-    const path = currentTarget.dataset.path
 
     if (rawId === "null") {
-      navigateTo("/", "Home")
-
       goToRoot()
       return
     }
 
     const nextId = Number(currentTarget.dataset.id)
-    const clickedNode = state.nodes.find((node) => node.id === nextId)
-    if (clickedNode == null) {
-      console.log("404 NOT FOUND")
-      return
-    }
-    setCurrentFolder(clickedNode)
-    navigateTo(`${path}`, clickedNode.name)
+    setCurrentFolder(nextId)
   }
 
   function navigateToParent() {
@@ -105,16 +96,17 @@ export function NavigationBar() {
         goToRoot()
       }
     } else {
+      // todo : navigate to parent based on nodes in breadcrumb
       const clickedNode = state.nodes.find((node) => node.id === state.currentFolder.parentId)
       if (clickedNode == null) {
         return
       }
-      setCurrentFolder(clickedNode)
+      setCurrentFolder(clickedNode.id)
     }
   }
 
   function goToRoot() {
-    setCurrentFolder(rootFolder)
+    setCurrentFolder(rootFolder.id)
   }
 
   const goUp = h("button", "🡱", { className: "go-up" })

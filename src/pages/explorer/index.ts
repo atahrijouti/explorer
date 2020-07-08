@@ -16,7 +16,7 @@ export function ExplorerPage() {
       className: "explorer",
       [`on${AppEvent.MOUNTED}`]: () => {
         console.log("mounted app")
-        setCurrentFolder(rootFolder)
+        setCurrentFolder(rootFolder.id)
       },
       [`on${AppEvent.UNMOUNTED}`]: () => {
         console.log("unmounted app")

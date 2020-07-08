@@ -1,7 +1,6 @@
 import h from "hyperscript"
 
 import {
-  NodeType,
   Node,
   SelectionChange,
   setCurrentFolder,
@@ -15,6 +14,7 @@ import { NodeComponent } from "./node"
 import "./node-list.scss"
 import { appEmitter } from "~pages/explorer"
 import { navigateTo } from "~router"
+import { NodeType } from "~pages/explorer/types"
 
 export function NodeList() {
   function handleKeyUp(e: KeyboardEvent) {
@@ -68,7 +68,7 @@ export function NodeList() {
       return
     }
     if (node.type === NodeType.FOLDER) {
-      setCurrentFolder(node)
+      setCurrentFolder(node.id)
       navigateTo(node.name, node.name)
     } else {
       console.log(`${node.name} is a file : OPEN`)
@@ -106,9 +106,7 @@ export function NodeList() {
     const newUl = buildUl()
 
     state.nodes.forEach((node) => {
-      if (node.parentId === currentFolder.id) {
-        newUl.appendChild(buildNode(node))
-      }
+      newUl.appendChild(buildNode(node))
     })
 
     explorer.replaceChild(newUl, ul)
