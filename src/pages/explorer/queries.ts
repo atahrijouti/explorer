@@ -2,32 +2,6 @@ import { Node, rootFolder, state } from "~pages/explorer/state"
 import { ID, NodeType } from "~pages/explorer/types"
 import { getPathFromWindowUrl } from "~router"
 
-export function findNodeById(id: ID) {
-  return dbTable.find((n) => n.id === id)
-}
-
-export function findNodeChildren(id: ID) {
-  return dbTable.filter((n) => n.parentId === id)
-}
-
-export function getNodeAndChildren(id: ID): { node: Node; children: Node[] } | null {
-  if (id === rootFolder.id) {
-    return {
-      node: rootFolder,
-      children: findNodeChildren(rootFolder.id),
-    }
-  }
-
-  const node = findNodeById(id)
-  if (node == null) {
-    return null
-  }
-  return {
-    node,
-    children: findNodeChildren(id),
-  }
-}
-
 export function storeNewNode(name: string, type: NodeType) {
   const suitableName = getSuitableName(name, type, state.currentFolder.id)
   const newlyCreatedNode = {
@@ -127,6 +101,32 @@ export function findNodeFromPath(): { node: Node; breadcrumb: Node[] } | null {
   return {
     breadcrumb: [rootFolder, ...(<Node[]>breadcrumb)],
     node: <Node>breadcrumb[breadcrumb.length - 1],
+  }
+}
+
+export function findNodeById(id: ID) {
+  return dbTable.find((n) => n.id === id)
+}
+
+export function findNodeChildren(id: ID) {
+  return dbTable.filter((n) => n.parentId === id)
+}
+
+export function getNodeAndChildren(id: ID): { node: Node; children: Node[] } | null {
+  if (id === rootFolder.id) {
+    return {
+      node: rootFolder,
+      children: findNodeChildren(rootFolder.id),
+    }
+  }
+
+  const node = findNodeById(id)
+  if (node == null) {
+    return null
+  }
+  return {
+    node,
+    children: findNodeChildren(id),
   }
 }
 
