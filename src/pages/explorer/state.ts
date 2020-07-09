@@ -3,6 +3,7 @@ import { appEmitter } from "~pages/explorer/index"
 import { dispatch, AppEvent } from "./events"
 import { getNodeAndChildren } from "~pages/explorer/queries"
 import { ID, NodeType } from "~pages/explorer/types"
+import { navigateTo } from "~router"
 
 export type Node = {
   id: ID
@@ -18,28 +19,50 @@ export const rootFolder: Node = Object.freeze({
 })
 
 type State = {
-  breadcrumb: Array<Pick<Node, "id" | "name">>
+  breadcrumb: Node[]
   nodes: Node[]
   currentFolder: Node
   selectedNodeIds: number[]
   isRenaming: boolean
 }
 export const state: State = {
-  breadcrumb: [{ name: rootFolder.name, id: null }],
+  breadcrumb: [{ ...rootFolder }],
   nodes: [],
   currentFolder: rootFolder,
   selectedNodeIds: [] as number[],
   isRenaming: false,
 }
 
-export const browserFolder = (node: Node) => {
+export const browseFolder = (node: Node) => {
   const result = getNodeAndChildren(node.id)
   if (result == null) {
     console.log("404 NOT FOUND (should probably redirect Home)")
     return
   }
 
+  setUpBreadcrumb(result.node)
   setUpUIForFolder(result)
+  navigateToFolder()
+}
+
+const setUpBreadcrumb = (node: Node) => {
+  if (node.id === rootFolder.id) {
+    state.breadcrumb = [rootFolder]
+    return
+  }
+  const clone = [...state.breadcrumb]
+  const parentIndex = clone.findIndex((breadcrumbNode) => breadcrumbNode.id === node.parentId)
+  if (parentIndex < 0) {
+    throw Error("This is probably an edge case, but I will still raise the error :P")
+  }
+  clone.splice(parentIndex + 1)
+  state.breadcrumb = [...clone, node]
+}
+
+const navigateToFolder = () => {
+  const [_, ...pathParts] = state.breadcrumb
+  const absolutePath = `/${pathParts.map((node) => node.name).join("/")}`
+  navigateTo(absolutePath, state.currentFolder.name)
 }
 
 const setUpUIForFolder = ({ node, children }: { node: Node; children: Node[] }) => {

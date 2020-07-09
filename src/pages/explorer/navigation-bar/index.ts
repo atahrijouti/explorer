@@ -8,37 +8,28 @@ import renameFileImage from "~images/rename_file.png"
 import { ControlButton } from "./control-button"
 
 import "./navigation-bar.scss"
-import { findNodeById, findParents } from "~pages/explorer/queries"
-import { browserFolder, Node, rootFolder, SelectionChange, state } from "~pages/explorer/state"
+import { browseFolder, Node, rootFolder, SelectionChange, state } from "~pages/explorer/state"
 import { AppEvent, dispatch } from "~pages/explorer/events"
 import { appEmitter } from "~pages/explorer"
 import { NodeType } from "~pages/explorer/types"
 
-type BreadKneader = {
-  render: string
-  path: string
-}
 export function NavigationBar() {
-  function renderBreadcrumb(currentFolder: Node) {
-    const breadcrumbItems = findParents(currentFolder)
-    if (state.currentFolder !== rootFolder) {
-      breadcrumbItems.push(state.currentFolder)
-    }
-
-    breadcrumb.innerHTML = breadcrumbItems.reduce<BreadKneader>(
-      (accumulator, node: Node) => {
-        if (node != rootFolder) {
-          accumulator.path = accumulator.path + "/" + node.name
-        }
-        accumulator.render += `<li data-id="${node.id}" data-path="${accumulator.path}" tabindex="0"><span>${node.name}</span></li>`
-        return accumulator
-      },
-      { path: "", render: "" }
-    ).render
-
-    Array.from(breadcrumb.querySelectorAll("li")).forEach((node) =>
-      node.addEventListener("click", respondToBreadcrumbClick)
-    )
+  function renderBreadcrumb() {
+    breadcrumb.innerHTML = ""
+    state.breadcrumb.forEach((breadcrumbNode) => {
+      breadcrumb.appendChild(
+        h(
+          "li",
+          {
+            tabindex: 0,
+            ["onclick"]: () => {
+              respondToBreadcrumbClick(breadcrumbNode)
+            },
+          },
+          h("span", breadcrumbNode.name)
+        )
+      )
+    })
   }
 
   function handleDeleteNodes() {
@@ -51,7 +42,7 @@ export function NavigationBar() {
 
   function handleFolderChanged(e: Event) {
     const folder = (e as CustomEvent<Node>).detail
-    renderBreadcrumb(folder)
+    renderBreadcrumb()
     if (folder.id === null) {
       goUp.setAttribute("disabled", "disabled")
     } else {
@@ -70,17 +61,13 @@ export function NavigationBar() {
     }
   }
 
-  function respondToBreadcrumbClick(e: MouseEvent) {
-    const currentTarget = e.currentTarget as HTMLLIElement
-    const rawId = currentTarget.dataset.id
-
-    if (rawId === "null") {
+  function respondToBreadcrumbClick(node: Node) {
+    if (node.id === rootFolder.id) {
       goToRoot()
       return
     }
 
-    const node = findNodeById(Number(currentTarget.dataset.id))!
-    browserFolder(node)
+    browseFolder(node)
   }
 
   function navigateToParent() {
@@ -89,17 +76,18 @@ export function NavigationBar() {
         goToRoot()
       }
     } else {
-      // todo : navigate to parent based on nodes in breadcrumb
-      const parent = state.nodes.find((node) => node.id === state.currentFolder.parentId)
+      const parent = state.breadcrumb.find(
+        (breadcrumNode) => breadcrumNode.id === state.currentFolder.parentId
+      )
       if (parent == null) {
         return
       }
-      browserFolder(parent)
+      browseFolder(parent)
     }
   }
 
   function goToRoot() {
-    browserFolder(rootFolder)
+    browseFolder(rootFolder)
   }
 
   const goUp = h("button", "🡱", { className: "go-up" })

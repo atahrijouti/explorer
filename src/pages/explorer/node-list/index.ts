@@ -1,7 +1,7 @@
 import h from "hyperscript"
 
 import {
-  browserFolder,
+  browseFolder,
   Node,
   SelectionChange,
   setSelectedNodeIds,
@@ -13,7 +13,6 @@ import { deleteSelectedNodes, storeNewNode } from "~pages/explorer/queries"
 import { NodeComponent } from "./node"
 import "./node-list.scss"
 import { appEmitter } from "~pages/explorer"
-import { navigateTo } from "~router"
 import { NodeType } from "~pages/explorer/types"
 
 export function NodeList() {
@@ -68,8 +67,7 @@ export function NodeList() {
       return
     }
     if (node.type === NodeType.FOLDER) {
-      browserFolder(node)
-      navigateTo(node.name, node.name)
+      browseFolder(node)
     } else {
       console.log(`${node.name} is a file : OPEN`)
     }
