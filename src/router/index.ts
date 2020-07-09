@@ -26,7 +26,7 @@ function cleanPath(path: string) {
   return path.replace(/\/$/, "")
 }
 
-function getPathFromWindowUrl() {
+export function getPathFromWindowUrl() {
   return cleanPath(window.location.pathname)
 }
 

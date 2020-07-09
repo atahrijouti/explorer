@@ -1,5 +1,6 @@
 import { Node, rootFolder, state } from "~pages/explorer/state"
 import { ID, NodeType } from "~pages/explorer/types"
+import { getPathFromWindowUrl } from "~router"
 
 let nextId = 13
 
@@ -18,17 +19,31 @@ export const dbTable: Node[] = [
   { id: 12, name: "random.atirecht", type: NodeType.FILE, parentId: null },
 ]
 
-export function findParents(lookupNode: Node): Node[] {
-  if (lookupNode.parentId === null) {
-    return [rootFolder]
+export function findNodeFromPath(): { node: Node; breadcrumb: Node[] } | null {
+  const path = getPathFromWindowUrl()
+  if (path === "/") {
+    return {
+      breadcrumb: [rootFolder],
+      node: rootFolder,
+    }
   }
 
-  const parent = dbTable.find((node) => node.id === lookupNode.parentId)
+  const breadcrumb = path
+    .substr(1)
+    .split("/")
+    .map((folder) => {
+      return dbTable.find((node) => node.name === decodeURIComponent(folder))
+    })
 
-  if (parent == null) {
-    return []
+  if (!breadcrumb.every((crumb) => crumb != null)) {
+    return null
   }
-  return [...findParents(parent), parent]
+
+  // <Node[]> is necessary otherwisse typescript thinks breadcrumb has undefined values inside
+  return {
+    breadcrumb: [rootFolder, ...(<Node[]>breadcrumb)],
+    node: <Node>breadcrumb[breadcrumb.length - 1],
+  }
 }
 
 export function findNodeById(id: ID) {
