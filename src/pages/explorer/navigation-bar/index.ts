@@ -97,11 +97,11 @@ export function NavigationBar() {
       }
     } else {
       // todo : navigate to parent based on nodes in breadcrumb
-      const clickedNode = state.nodes.find((node) => node.id === state.currentFolder.parentId)
-      if (clickedNode == null) {
+      const parent = state.nodes.find((node) => node.id === state.currentFolder.parentId)
+      if (parent == null) {
         return
       }
-      setCurrentFolder(clickedNode.id)
+      setCurrentFolder(parent.id)
     }
   }
 
