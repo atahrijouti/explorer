@@ -39,7 +39,7 @@ export function findNodeChildren(id: ID) {
   return dbTable.filter((n) => n.parentId === id)
 }
 
-export function getNodeAndChildren(id: ID) {
+export function getNodeAndChildren(id: ID): { node: Node; children: Node[] } | null {
   if (id === rootFolder.id) {
     return {
       node: rootFolder,

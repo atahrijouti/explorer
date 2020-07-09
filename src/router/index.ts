@@ -10,9 +10,9 @@ export function navigateTo(path: string, title: string) {
   const cleansedPath = cleanPath(path)
   const isRelative = isRelativePath(cleansedPath)
   const prefix = getPathFromWindowUrl() === "/" ? "" : getPathFromWindowUrl()
-  const redirectTo = isRelative ? `${prefix}/${cleansedPath}` : cleansedPath
-  pushState(redirectTo, title)
-  updateRoute(redirectTo)
+  const absolutePath = isRelative ? `${prefix}/${cleansedPath}` : cleansedPath
+  pushState(absolutePath, title)
+  updateRoute(absolutePath)
 }
 
 export function pushState(path: string, title: string) {

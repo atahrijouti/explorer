@@ -32,13 +32,17 @@ export const state: State = {
   isRenaming: false,
 }
 
-export const setCurrentFolder = (id: ID) => {
-  const result = getNodeAndChildren(id)
+export const browserFolder = (node: Node) => {
+  const result = getNodeAndChildren(node.id)
   if (result == null) {
-    console.log(console.log("404 NOT FOUND"))
+    console.log("404 NOT FOUND (should probably redirect Home)")
     return
   }
-  const { node, children } = result
+
+  setUpUIForFolder(result)
+}
+
+const setUpUIForFolder = ({ node, children }: { node: Node; children: Node[] }) => {
   state.currentFolder = node
   state.nodes = [...children]
   dispatch(appEmitter, AppEvent.FOLDER_CHANGED, node)

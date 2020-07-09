@@ -8,14 +8,8 @@ import renameFileImage from "~images/rename_file.png"
 import { ControlButton } from "./control-button"
 
 import "./navigation-bar.scss"
-import { findParents } from "~pages/explorer/queries"
-import {
-  Node,
-  rootFolder,
-  SelectionChange,
-  setCurrentFolder,
-  state,
-} from "~pages/explorer/state"
+import { findNodeById, findParents } from "~pages/explorer/queries"
+import { browserFolder, Node, rootFolder, SelectionChange, state } from "~pages/explorer/state"
 import { AppEvent, dispatch } from "~pages/explorer/events"
 import { appEmitter } from "~pages/explorer"
 import { NodeType } from "~pages/explorer/types"
@@ -85,8 +79,8 @@ export function NavigationBar() {
       return
     }
 
-    const nextId = Number(currentTarget.dataset.id)
-    setCurrentFolder(nextId)
+    const node = findNodeById(Number(currentTarget.dataset.id))!
+    browserFolder(node)
   }
 
   function navigateToParent() {
@@ -100,12 +94,12 @@ export function NavigationBar() {
       if (parent == null) {
         return
       }
-      setCurrentFolder(parent.id)
+      browserFolder(parent)
     }
   }
 
   function goToRoot() {
-    setCurrentFolder(rootFolder.id)
+    browserFolder(rootFolder)
   }
 
   const goUp = h("button", "🡱", { className: "go-up" })

@@ -4,7 +4,7 @@ import { NodeList } from "~pages/explorer/node-list"
 import { AppEvent } from "~pages/explorer/events"
 import { NavigationBar } from "~pages/explorer/navigation-bar"
 
-import { rootFolder, setCurrentFolder } from "./state"
+import { browserFolder, rootFolder } from "./state"
 import "./explorer.css"
 
 export const appEmitter = new EventTarget()
@@ -16,7 +16,7 @@ export function ExplorerPage() {
       className: "explorer",
       [`on${AppEvent.MOUNTED}`]: () => {
         console.log("mounted app")
-        setCurrentFolder(rootFolder.id)
+        browserFolder(rootFolder)
       },
       [`on${AppEvent.UNMOUNTED}`]: () => {
         console.log("unmounted app")

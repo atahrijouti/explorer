@@ -1,9 +1,9 @@
 import h from "hyperscript"
 
 import {
+  browserFolder,
   Node,
   SelectionChange,
-  setCurrentFolder,
   setSelectedNodeIds,
   state,
 } from "~pages/explorer/state"
@@ -68,7 +68,7 @@ export function NodeList() {
       return
     }
     if (node.type === NodeType.FOLDER) {
-      setCurrentFolder(node.id)
+      browserFolder(node)
       navigateTo(node.name, node.name)
     } else {
       console.log(`${node.name} is a file : OPEN`)
@@ -102,7 +102,7 @@ export function NodeList() {
     })
   }
 
-  function renderExplorerNodes(currentFolder: Node) {
+  function renderExplorerNodes() {
     const newUl = buildUl()
 
     state.nodes.forEach((node) => {
@@ -139,8 +139,8 @@ export function NodeList() {
     })
   }
 
-  appEmitter.addEventListener(AppEvent.FOLDER_CHANGED, (e) => {
-    renderExplorerNodes((e as CustomEvent<Node>).detail)
+  appEmitter.addEventListener(AppEvent.FOLDER_CHANGED, () => {
+    renderExplorerNodes()
   })
   appEmitter.addEventListener(AppEvent.SELECTION_CHANGED, (e) => {
     const [current, previous] = (e as CustomEvent<SelectionChange>).detail
