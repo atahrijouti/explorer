@@ -18,7 +18,6 @@ import {
 } from "~pages/explorer/state"
 import { AppEvent, dispatch } from "~pages/explorer/events"
 import { appEmitter } from "~pages/explorer"
-import { navigateTo } from "~router"
 import { NodeType } from "~pages/explorer/types"
 
 type BreadKneader = {
