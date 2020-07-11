@@ -97,7 +97,7 @@ export function findNodeFromPath(): { node: Node; breadcrumb: Node[] } | null {
     return null
   }
 
-  // <Node[]> is necessary otherwisse typescript thinks breadcrumb has undefined values inside
+  // <Node[]> is necessary otherwise typescript thinks breadcrumb has undefined values inside
   return {
     breadcrumb: [rootFolder, ...(<Node[]>breadcrumb)],
     node: <Node>breadcrumb[breadcrumb.length - 1],

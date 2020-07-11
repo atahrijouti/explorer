@@ -60,7 +60,8 @@ const setUpBreadcrumb = (node: Node) => {
 }
 
 const navigateToFolder = () => {
-  const [_, ...pathParts] = state.breadcrumb
+  const pathParts = [...state.breadcrumb]
+  pathParts.shift()
   const absolutePath = `/${pathParts.map((node) => node.name).join("/")}`
   navigateTo(absolutePath, state.currentFolder.name)
 }
@@ -70,7 +71,6 @@ const setUpUIForFolder = ({ node, children }: { node: Node; children: Node[] }) 
   state.nodes = [...children]
   dispatch(appEmitter, AppEvent.FOLDER_CHANGED, node)
   setSelectedNodeIds([])
-  // todo: update breadcrumb, and from it, the path as well
 }
 
 export type SelectionChange = Array<number[]>
