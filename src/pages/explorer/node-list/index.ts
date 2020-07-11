@@ -1,10 +1,9 @@
 import h from "hyperscript"
 
 import {
-  NodeType,
+  browseFolder,
   Node,
   SelectionChange,
-  setCurrentFolder,
   setSelectedNodeIds,
   state,
 } from "~pages/explorer/state"
@@ -14,7 +13,7 @@ import { deleteSelectedNodes, storeNewNode } from "~pages/explorer/queries"
 import { NodeComponent } from "./node"
 import "./node-list.scss"
 import { appEmitter } from "~pages/explorer"
-import { navigateTo } from "~router"
+import { NodeType } from "~pages/explorer/types"
 
 export function NodeList() {
   function handleKeyUp(e: KeyboardEvent) {
@@ -68,8 +67,7 @@ export function NodeList() {
       return
     }
     if (node.type === NodeType.FOLDER) {
-      setCurrentFolder(node)
-      navigateTo(node.name, node.name)
+      browseFolder(node)
     } else {
       console.log(`${node.name} is a file : OPEN`)
     }
@@ -102,13 +100,11 @@ export function NodeList() {
     })
   }
 
-  function renderExplorerNodes(currentFolder: Node) {
+  function renderExplorerNodes() {
     const newUl = buildUl()
 
     state.nodes.forEach((node) => {
-      if (node.parentId === currentFolder.id) {
-        newUl.appendChild(buildNode(node))
-      }
+      newUl.appendChild(buildNode(node))
     })
 
     explorer.replaceChild(newUl, ul)
@@ -141,8 +137,8 @@ export function NodeList() {
     })
   }
 
-  appEmitter.addEventListener(AppEvent.FOLDER_CHANGED, (e) => {
-    renderExplorerNodes((e as CustomEvent<Node>).detail)
+  appEmitter.addEventListener(AppEvent.FOLDER_CHANGED, () => {
+    renderExplorerNodes()
   })
   appEmitter.addEventListener(AppEvent.SELECTION_CHANGED, (e) => {
     const [current, previous] = (e as CustomEvent<SelectionChange>).detail
