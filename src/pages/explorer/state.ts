@@ -1,12 +1,10 @@
 import { appEmitter } from "~pages/explorer/index"
 
 import { dispatch, AppEvent } from "./events"
+import { getNodeAndChildren } from "~pages/explorer/queries"
+import { ID, NodeType } from "~pages/explorer/types"
+import { navigateTo } from "~router"
 
-export type ID = number | null
-export enum NodeType {
-  FOLDER = "FOLDER",
-  FILE = "FILE",
-}
 export type Node = {
   id: ID
   name: string
@@ -21,39 +19,58 @@ export const rootFolder: Node = Object.freeze({
 })
 
 type State = {
-  nextId: number
-  breadcrumb: Array<Pick<Node, "id" | "name">>
+  breadcrumb: Node[]
   nodes: Node[]
   currentFolder: Node
   selectedNodeIds: number[]
   isRenaming: boolean
 }
 export const state: State = {
-  nextId: 13,
-  breadcrumb: [{ name: rootFolder.name, id: null }],
-  nodes: [
-    { id: 1, name: "Videos", type: NodeType.FOLDER, parentId: null },
-    { id: 2, name: "Pictures", type: NodeType.FOLDER, parentId: null },
-    { id: 3, name: "Documents", type: NodeType.FOLDER, parentId: null },
-    { id: 4, name: "Music", type: NodeType.FOLDER, parentId: null },
-    { id: 7, name: "New folder", type: NodeType.FOLDER, parentId: null },
-    { id: 8, name: "New folder (2)", type: NodeType.FOLDER, parentId: null },
-    { id: 5, name: "CV", type: NodeType.FOLDER, parentId: 3 },
-    { id: 6, name: "Amine Tirecht.pdf", type: NodeType.FILE, parentId: 5 },
-    { id: 9, name: "Hello world.txt", type: NodeType.FILE, parentId: null },
-    { id: 10, name: "How is it going.mp3", type: NodeType.FILE, parentId: null },
-    { id: 11, name: "desktop.ini", type: NodeType.FILE, parentId: null },
-    { id: 12, name: "random.atirecht", type: NodeType.FILE, parentId: null },
-  ],
+  breadcrumb: [{ ...rootFolder }],
+  nodes: [],
   currentFolder: rootFolder,
   selectedNodeIds: [] as number[],
   isRenaming: false,
 }
 
-export const setCurrentFolder = (folder: Node) => {
-  state.currentFolder = folder
-  dispatch(appEmitter, AppEvent.FOLDER_CHANGED, folder)
+export const browseFolder = (node: Node) => {
+  const result = getNodeAndChildren(node.id)
+  if (result == null) {
+    console.log("404 NOT FOUND (should probably redirect Home)")
+    return
+  }
+
+  setUpBreadcrumb(result.node)
+  setUpUIForFolder(result)
+  navigateToFolder()
+}
+
+const setUpBreadcrumb = (node: Node) => {
+  if (node.id === rootFolder.id) {
+    state.breadcrumb = [rootFolder]
+    return
+  }
+  const clone = [...state.breadcrumb]
+  const parentIndex = clone.findIndex((breadcrumbNode) => breadcrumbNode.id === node.parentId)
+  if (parentIndex < 0) {
+    throw Error("This is probably an edge case, but I will still raise the error :P")
+  }
+  clone.splice(parentIndex + 1)
+  state.breadcrumb = [...clone, node]
+}
+
+const navigateToFolder = () => {
+  const [_, ...pathParts] = state.breadcrumb
+  const absolutePath = `/${pathParts.map((node) => node.name).join("/")}`
+  navigateTo(absolutePath, state.currentFolder.name)
+}
+
+const setUpUIForFolder = ({ node, children }: { node: Node; children: Node[] }) => {
+  state.currentFolder = node
+  state.nodes = [...children]
+  dispatch(appEmitter, AppEvent.FOLDER_CHANGED, node)
   setSelectedNodeIds([])
+  // todo: update breadcrumb, and from it, the path as well
 }
 
 export type SelectionChange = Array<number[]>

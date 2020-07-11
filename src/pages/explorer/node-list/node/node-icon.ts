@@ -4,7 +4,8 @@ import fullFolderImage from "~images/full_folder.png"
 import textFileImage from "~images/text_file.png"
 import audioFileImage from "~images/audio_file.png"
 import unknownImage from "~images/unknown.png"
-import { Node, NodeType, state } from "~pages/explorer/state"
+import { Node, state } from "~pages/explorer/state"
+import { NodeType } from "~pages/explorer/types"
 
 export function nodeIcon(node: Node): string {
   switch (node.type) {
