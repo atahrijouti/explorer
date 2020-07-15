@@ -8,7 +8,7 @@ import {
   state,
 } from "~pages/explorer/state"
 import { AppEvent, dispatch } from "~pages/explorer/events"
-import { deleteSelectedNodes, storeNewNode } from "~pages/explorer/queries"
+import { storeNewNode, deleteNodes } from "~pages/explorer/queries"
 
 import { NodeComponent } from "./node"
 import "./node-list.scss"
@@ -22,10 +22,10 @@ export function NodeList() {
     }
   }
 
-  function createNewNode(e: Event) {
+  async function createNewNode(e: Event) {
     const type = (e as CustomEvent<NodeType>).detail
     const name = type === NodeType.FILE ? "New File" : "New Folder"
-    const node = storeNewNode(name, type)
+    const node = (await storeNewNode(name, type, state.currentFolder.id)) as Node & { id: number }
     state.isRenaming = true
     setSelectedNodeIds([node.id])
     const domNode = buildNode(node)
@@ -39,6 +39,10 @@ export function NodeList() {
     })
     deleteSelectedNodes()
     setSelectedNodeIds([])
+  }
+
+  function deleteSelectedNodes() {
+    deleteNodes(state.selectedNodeIds)
   }
 
   function handleInputKeyUp(node: Node, e: KeyboardEvent) {
@@ -62,12 +66,12 @@ export function NodeList() {
     renderSpecificExplorerNodes(state.selectedNodeIds)
   }
 
-  function handleNodeDblClick(node: Node, e: MouseEvent) {
+  async function handleNodeDblClick(node: Node, e: MouseEvent) {
     if ((e.target as HTMLElement).classList.contains("rename")) {
       return
     }
     if (node.type === NodeType.FOLDER) {
-      browseFolder(node)
+      await browseFolder(node)
     } else {
       console.log(`${node.name} is a file : OPEN`)
     }
