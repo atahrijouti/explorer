@@ -15,14 +15,14 @@ export function ExplorerPage() {
     "div",
     {
       className: "explorer",
-      [`on${AppEvent.MOUNTED}`]: () => {
-        const result = findNodeFromPath()
+      [`on${AppEvent.MOUNTED}`]: async () => {
+        const result = await findNodeFromPath()
         if (!result) {
-          browseFolder(rootFolder)
+          await browseFolder(rootFolder)
         } else {
           state.breadcrumb = result.breadcrumb
           state.currentFolder = result.node
-          browseFolder(state.currentFolder)
+          await browseFolder(state.currentFolder)
         }
       },
       [`on${AppEvent.UNMOUNTED}`]: () => {},

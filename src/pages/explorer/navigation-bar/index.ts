@@ -22,8 +22,8 @@ export function NavigationBar() {
           "li",
           {
             tabindex: 0,
-            ["onclick"]: () => {
-              respondToBreadcrumbClick(breadcrumbNode)
+            ["onclick"]: async () => {
+              await respondToBreadcrumbClick(breadcrumbNode)
             },
           },
           h("span", breadcrumbNode.name)
@@ -61,16 +61,16 @@ export function NavigationBar() {
     }
   }
 
-  function respondToBreadcrumbClick(node: Node) {
+  async function respondToBreadcrumbClick(node: Node) {
     if (node.id === rootFolder.id) {
       goToRoot()
       return
     }
 
-    browseFolder(node)
+    await browseFolder(node)
   }
 
-  function navigateToParent() {
+  async function navigateToParent() {
     if (state.currentFolder.parentId === null) {
       if (state.currentFolder.id !== null) {
         goToRoot()
@@ -82,12 +82,12 @@ export function NavigationBar() {
       if (parent == null) {
         return
       }
-      browseFolder(parent)
+      await browseFolder(parent)
     }
   }
 
-  function goToRoot() {
-    browseFolder(rootFolder)
+  async function goToRoot() {
+    await browseFolder(rootFolder)
   }
 
   const goUp = h("button", "🡱", { className: "go-up" })

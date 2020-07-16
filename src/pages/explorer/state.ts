@@ -33,8 +33,8 @@ export const state: State = {
   isRenaming: false,
 }
 
-export const browseFolder = (node: Node) => {
-  const result = getNodeAndChildren(node.id)
+export const browseFolder = async (node: Node) => {
+  const result = await getNodeAndChildren(node.id)
   if (result == null) {
     console.log("404 NOT FOUND (should probably redirect Home)")
     return
