@@ -17,8 +17,13 @@ import { NodeType } from "~pages/explorer/types"
 
 export function NodeList() {
   function handleKeyUp(e: KeyboardEvent) {
-    if (e.key === "F2") {
-      startRenaming()
+    switch (e.key) {
+      case "F2":
+        state.selectedNodeIds.length && startRenaming()
+        break
+      case "Delete":
+        state.selectedNodeIds.length && removeNodes()
+        break
     }
   }
 
@@ -34,16 +39,16 @@ export function NodeList() {
     dispatch(domNode, AppEvent.MOUNTED)
   }
 
-  function removeNodes() {
+  async function removeNodes() {
     state.selectedNodeIds.forEach((id) => {
       explorer.querySelector(`[data-id="${id}"]`)?.remove()
     })
-    deleteSelectedNodes()
+    await deleteSelectedNodes()
     setSelectedNodeIds([])
   }
 
-  function deleteSelectedNodes() {
-    deleteNodes(state.selectedNodeIds)
+  async function deleteSelectedNodes() {
+    await deleteNodes(state.selectedNodeIds)
   }
 
   function handleInputKeyUp(node: Node, e: KeyboardEvent) {
@@ -126,7 +131,6 @@ export function NodeList() {
     }
     // generate selector to select all existing dom nodes based on nodeIds
     const selector = nodeIds.map((id) => `[data-id="${id}"]`).join(",")
-
     explorer.querySelectorAll<HTMLLIElement>(selector).forEach((currentNodeDom) => {
       const id = Number(currentNodeDom.dataset.id)
       const node = state.nodes.find((n) => n.id === id)
