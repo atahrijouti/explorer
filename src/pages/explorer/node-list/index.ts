@@ -26,10 +26,11 @@ export function NodeList() {
     const type = (e as CustomEvent<NodeType>).detail
     const name = type === NodeType.FILE ? "New File" : "New Folder"
     const node = (await storeNewNode(name, type, state.currentFolder.id)) as Node & { id: number }
+    state.nodes.push(node)
     state.isRenaming = true
-    setSelectedNodeIds([node.id])
     const domNode = buildNode(node)
     ul.appendChild(domNode)
+    setSelectedNodeIds([node.id])
     dispatch(domNode, AppEvent.MOUNTED)
   }
 
