@@ -71,13 +71,13 @@ export function NavigationBar() {
   }
 
   async function navigateToParent() {
-    if (state.currentFolder.parentId === null) {
+    if (state.currentFolder.parent_id === null) {
       if (state.currentFolder.id !== null) {
         goToRoot()
       }
     } else {
       const parent = state.breadcrumb.find(
-        (breadcrumNode) => breadcrumNode.id === state.currentFolder.parentId
+        (breadcrumNode) => breadcrumNode.id === state.currentFolder.parent_id
       )
       if (parent == null) {
         return

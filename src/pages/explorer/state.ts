@@ -9,13 +9,13 @@ export type Node = {
   id: ID
   name: string
   type: NodeType
-  parentId: ID
+  parent_id: ID
 }
 export const rootFolder: Node = Object.freeze({
   id: null,
   name: "Home",
   type: NodeType.FOLDER,
-  parentId: null,
+  parent_id: null,
 })
 
 type State = {
@@ -51,7 +51,9 @@ const setUpBreadcrumb = (node: Node) => {
     return
   }
   const clone = [...state.breadcrumb]
-  const parentIndex = clone.findIndex((breadcrumbNode) => breadcrumbNode.id === node.parentId)
+  const parentIndex = clone.findIndex((breadcrumbNode) => breadcrumbNode.id === node.parent_id)
+  console.log(clone[0].id, node.parent_id);
+  console.log({ clone, node, parentIndex })
   if (parentIndex < 0) {
     throw Error("This is probably an edge case, but I will still raise the error :P")
   }

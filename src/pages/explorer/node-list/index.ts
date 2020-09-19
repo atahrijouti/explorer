@@ -8,7 +8,7 @@ import {
   state,
 } from "~pages/explorer/state"
 import { AppEvent, dispatch } from "~pages/explorer/events"
-import { storeNewNode, deleteNodes } from "~pages/explorer/queries"
+import { storeNewNode, deleteNodes, renameNode } from "~pages/explorer/queries"
 
 import { NodeComponent } from "./node"
 import "./node-list.scss"
@@ -51,10 +51,18 @@ export function NodeList() {
     await deleteNodes(state.selectedNodeIds)
   }
 
-  function handleInputKeyUp(node: Node, e: KeyboardEvent) {
+  async function handleInputKeyUp(node: Node, e: KeyboardEvent) {
+    if (node.id == null) {
+      return
+    }
     switch (e.key) {
       case "Enter":
-        node.name = (e.currentTarget as HTMLInputElement).value
+        let newName = (e.currentTarget as HTMLInputElement).value
+        const result = await renameNode(node.id, newName) as Node
+        if(result.hasOwnProperty("error")) {
+          break;
+        }
+        node.name = result.name;
         state.isRenaming = false
         renderSpecificExplorerNodes(state.selectedNodeIds)
         break
