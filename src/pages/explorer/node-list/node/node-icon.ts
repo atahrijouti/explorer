@@ -19,7 +19,7 @@ export function nodeIcon(node: Node): string {
 }
 
 function getFolderImage(node: Node) {
-  const childCount = state.nodes.filter((child) => child.parentId === node.id).length
+  const childCount = state.nodes.filter((child) => child.parent_id === node.id).length
   return childCount > 0 ? fullFolderImage : folderImage
 }
 
